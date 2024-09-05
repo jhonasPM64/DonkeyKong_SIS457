@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Plataforma.generated.h"
 
+class UStaticMeshComponent;
+
 UCLASS()
 class DONKEYKONG_SIS457_API APlataforma : public AActor
 {

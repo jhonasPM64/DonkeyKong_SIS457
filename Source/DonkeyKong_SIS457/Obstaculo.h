@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Obstaculo.generated.h"
 
+class UStaticMeshComponent;
+
 UCLASS()
 class DONKEYKONG_SIS457_API AObstaculo : public AActor
 {
