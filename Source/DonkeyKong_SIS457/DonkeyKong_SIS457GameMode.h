@@ -21,9 +21,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	AObstaculo* obstaculo01;
-	ADonkeyKong_SIS457* player01;
-	APlataforma* cp01;
+	AObstaculo* obstaculo01 = nullptr;
+	ADonkeyKong_SIS457* player01 = nullptr;
+	APlataforma* cp01 = nullptr;
 };
 
 
