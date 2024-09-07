@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Obstaculo.h"
 #include "DonkeyKong_SIS457Character.generated.h"
 
 UCLASS(config=Game)
@@ -21,6 +22,7 @@ class ADonkeyKong_SIS457Character : public ACharacter
 
 protected:
 
+	void BeginPlay() override;
 	/** Called for side to side input */
 	void MoveRight(float Val);
 
@@ -34,6 +36,8 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
 
+	void Parar();
+	bool detener=false;
 
 public:
 	ADonkeyKong_SIS457Character();
@@ -42,4 +46,10 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+public:
+	AObstaculo* AObstaculo01;
+
+public:
+	FORCEINLINE AObstaculo* GetObstaculo() const { return AObstaculo01; }
+	FORCEINLINE void SetObstaculo(AObstaculo* _obstaculo) { AObstaculo01 = _obstaculo; }
 };

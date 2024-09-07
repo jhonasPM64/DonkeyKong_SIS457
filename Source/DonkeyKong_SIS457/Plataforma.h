@@ -26,5 +26,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
- 
+private:
+	UInputComponent* InputComponent;
+	void SetupInputBindings();
+	void CustomAction();
 };

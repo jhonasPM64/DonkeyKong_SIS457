@@ -33,4 +33,14 @@ void APlataforma::Tick(float DeltaTime)
 
 }
 
+void APlataforma::SetupInputBindings()
+{
+	InputComponent->BindAction("CustomAction", IE_Pressed, this, &APlataforma::CustomAction);
+}
+
+void APlataforma::CustomAction()
+{
+}
+
+
 

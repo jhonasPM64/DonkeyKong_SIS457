@@ -6,6 +6,9 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Obstaculo.h"
+#include "DonkeyKong_SIS457GameMode.h"
+#include "DonkeyKong_SIS457.h"
 
 ADonkeyKong_SIS457Character::ADonkeyKong_SIS457Character()
 {
@@ -22,7 +25,7 @@ ADonkeyKong_SIS457Character::ADonkeyKong_SIS457Character()
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->SetUsingAbsoluteRotation(true); // Rotation of the character should not affect rotation of boom
 	CameraBoom->bDoCollisionTest = false;
-	CameraBoom->TargetArmLength = 500.f;
+	CameraBoom->TargetArmLength = 1500.f;
 	CameraBoom->SocketOffset = FVector(0.f,0.f,75.f);
 	CameraBoom->SetRelativeRotation(FRotator(0.f,180.f,0.f));
 
@@ -57,6 +60,23 @@ void ADonkeyKong_SIS457Character::SetupPlayerInputComponent(class UInputComponen
 
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &ADonkeyKong_SIS457Character::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &ADonkeyKong_SIS457Character::TouchStopped);
+}
+
+void ADonkeyKong_SIS457Character::Parar()
+{
+	detener = !detener;
+	AObstaculo01->setDetener(detener);
+}
+
+void ADonkeyKong_SIS457Character::BeginPlay()
+{
+	Super::BeginPlay();
+
+	ADonkeyKong_SIS457* GameMode = Cast<ADonkeyKong_SIS457>(GetWorld()->GetAuthGameMode());
+	if (GameMode)
+	{
+		AObstaculo01 = GameMode->GetObstaculo();
+	}
 }
 
 void ADonkeyKong_SIS457Character::MoveRight(float Value)

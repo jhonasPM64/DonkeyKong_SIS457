@@ -23,7 +23,13 @@ protected:
 public:
 	AObstaculo* obstaculo01 = nullptr;
 	ADonkeyKong_SIS457* player01 = nullptr;
-	APlataforma* cp01 = nullptr;
+	APlataforma* cp02 = nullptr;
+	APlataforma* cp03 = nullptr;
+	APlataforma* cp04 = nullptr;
+	APlataforma* cp05 = nullptr;
+	APlataforma* cp06 = nullptr;
+
+	TArray<APlataforma*> Plataforma;
 };
 
 
