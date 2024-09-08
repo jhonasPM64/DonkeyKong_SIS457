@@ -61,7 +61,40 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 			}
 		}
 		posicionInicial.Z = posicionInicial.Z + incrementoAltoEntrePisos;
-
 		posicionInicial.Y = posicionInicial.Y + incrementoInicioPiso;
 	}
+
+	// ********** Generación de la primera columna **********
+	FTransform SpawnLocationColumna1;
+	FVector posicionColumna1 = FVector(1210.0f, 1800.0f, 910.0f); // Posición de la primera columna
+	FRotator rotacionColumna1 = FRotator(0.0f, 0.0f, 90.0f); // Rotación de 90 grados en el eje Y
+
+	SpawnLocationColumna1.SetLocation(posicionColumna1);
+	SpawnLocationColumna1.SetRotation(FQuat(rotacionColumna1));
+
+	// Escala personalizada para la primera columna
+	FVector escalaColumna1 = FVector(0.5f, 25.5f, 3.0f); // Alargada en el eje Z (altura)
+	SpawnLocationColumna1.SetScale3D(escalaColumna1);
+
+	// Spawnea la primera plataforma como columna
+	APlataforma* columnaPlataforma1 = GetWorld()->SpawnActor<APlataforma>(APlataforma::StaticClass(), SpawnLocationColumna1);
+	Plataforma.Add(columnaPlataforma1);
+
+	// ********** Generación de la segunda columna **********
+	FTransform SpawnLocationColumna2;
+	FVector posicionColumna2 = FVector(1210.0f, -1730.0f, 910.0f); // Posición diferente para la segunda columna
+	FRotator rotacionColumna2 = FRotator(0.0f, 0.0f, 90.0f); // Mantiene la rotación de 90 grados en el eje Y
+
+	SpawnLocationColumna2.SetLocation(posicionColumna2);
+	SpawnLocationColumna2.SetRotation(FQuat(rotacionColumna2));
+
+	// Escala personalizada para la segunda columna (puedes cambiarla si lo deseas)
+	FVector escalaColumna2 = FVector(0.5f, 25.5f, 3.0f); // Diferente escala (más baja que la primera)
+	SpawnLocationColumna2.SetScale3D(escalaColumna2);
+
+	// Spawnea la segunda plataforma como columna
+	APlataforma* columnaPlataforma2 = GetWorld()->SpawnActor<APlataforma>(APlataforma::StaticClass(), SpawnLocationColumna2);
+	Plataforma.Add(columnaPlataforma2);
+
+	// ********** Fin de la generación de columnas **********
 }
