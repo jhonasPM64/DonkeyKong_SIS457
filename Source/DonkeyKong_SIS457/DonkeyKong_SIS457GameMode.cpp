@@ -6,6 +6,7 @@
 #include "DonkeyKong_SIS457.h"
 #include "Obstaculo.h"
 #include "Plataforma.h"
+#include "Barril.h"
 
 class ADonkeyKong_SIS457;
 
@@ -27,16 +28,17 @@ ADonkeyKong_SIS457GameMode::ADonkeyKong_SIS457GameMode()
 void ADonkeyKong_SIS457GameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, TEXT("Actor Spawning"));
 
 	FTransform SpawnLocation;
-	/*/SpawnLocation.SetLocation(FVector(1160.0f, -210.0f, 140.0f));
+	SpawnLocation.SetLocation(FVector(1160.0f, -210.0f, 140.0f));
 	SpawnLocation.SetRotation(FQuat(FRotator(0.0f, 0.0f, 0.0f)));
 	obstaculo01 = GetWorld()->SpawnActor<AObstaculo>(AObstaculo::StaticClass(), SpawnLocation);
 	if (player01 != nullptr)
 	{
 		player01->SetObstaculo(obstaculo01);
-	}*/
+	}//codigo de la pared en movimiento
 
 	FVector posicionInicial = FVector(1160.0f, -1100.0f, 400.f);
 	FRotator rotacionInicial = FRotator(0.0f, 0.0f, 10.0f);
@@ -97,4 +99,19 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 	Plataforma.Add(columnaPlataforma2);
 
 	// ********** Fin de la generación de columnas **********
+
+}
+
+void ADonkeyKong_SIS457GameMode::SpawnBarril()
+{
+	if (numeroBarriles < 5) {
+
+		// Definir la ubicación y rotación para el nuevo barril
+		FVector SpawnLocation = FVector(1160.0f, 550.0f, 800.0f); // Ajusta según sea necesario
+		FRotator SpawnRotation = FRotator(90.0f, 0.0f, 0.0f);
+
+		// Crear el actor barril
+		barriles.Add(GetWorld()->SpawnActor<ABarril>(ABarril::StaticClass(), SpawnLocation, SpawnRotation));
+		numeroBarriles++;
+	}
 }

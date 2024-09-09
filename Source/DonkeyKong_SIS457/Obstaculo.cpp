@@ -31,6 +31,7 @@ void AObstaculo::BeginPlay()
 	incrementoZ = 2.0f;
 	subir = false;
 	setDetener(false);
+
 }
 
 // Called every frame
