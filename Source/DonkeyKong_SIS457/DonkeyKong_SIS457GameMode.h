@@ -10,6 +10,7 @@ class AObstaculo;
 class APlataforma;
 class ADonkeyKong_SIS457;
 class ABarril;
+class ACubo_Disparador;
 
 UCLASS(minimalapi)
 class ADonkeyKong_SIS457GameMode : public AGameModeBase
@@ -31,15 +32,11 @@ public:
 	APlataforma* cp06 = nullptr;*/
 	ABarril* barril01;
 
-	TArray<APlataforma*> Plataforma;
-	TArray<ABarril*> barriles;
+	TArray<APlataforma*> PlataformasPequenas;  // Renombrado para evitar conflictos
+	TMap<FVector, APlataforma*> MapaPlataformas;
+	TMap<APlataforma*, TArray<APlataforma*>> MapaDePlataformas;
+	void GenerarCubosAleatoriamente(int MaxCubos = 5);
 
-public:
-	void SpawnBarril();
-
-private:
-	FTimerHandle SpawnBarrilTimerHandle;
-	int numeroBarriles;
 };
 
 

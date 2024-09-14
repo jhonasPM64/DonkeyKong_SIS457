@@ -17,6 +17,18 @@ APlataforma::APlataforma()
 
 	FVector NewScale(2.0f, 6.0f, 0.5f);
 	SetActorScale3D(NewScale);
+
+	bMoviendose=false;
+	PosicionInicial = GetActorLocation();
+}
+
+void APlataforma::MoverPlataforma(const FVector& NuevaPosicion)
+{
+	SetActorLocation(NuevaPosicion);
+
+	// Mensaje en pantalla
+	//FString Mensaje = FString::Printf(TEXT("Plataforma movida a: %s"), *NuevaPosicion.ToString());
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, Mensaje);
 }
 
 // Called when the game starts or when spawned
@@ -24,13 +36,29 @@ void APlataforma::BeginPlay()
 {
 	Super::BeginPlay();
 	
+
 }
 
 // Called every frame
 void APlataforma::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+		if (bMoviendose)
+	{
+		FVector NuevaPosicion = GetActorLocation();
 
+		// Mover en el eje Z (arriba-abajo) o en el eje X (izquierda-derecha)
+		if (FMath::RandBool())
+		{
+			NuevaPosicion.Z += FMath::Sin(GetWorld()->GetTimeSeconds()) * DeltaTime * 100.0f; // Oscilar en Z
+		}
+		else
+		{
+			NuevaPosicion.Y += FMath::Sin(GetWorld()->GetTimeSeconds()) * DeltaTime * 100.0f; // Oscilar en X
+		}
+
+		SetActorLocation(NuevaPosicion);
+	}
 }
 
 void APlataforma::SetupInputBindings()

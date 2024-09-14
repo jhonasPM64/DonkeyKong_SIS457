@@ -7,6 +7,7 @@
 #include "Obstaculo.h"
 #include "Plataforma.h"
 #include "Barril.h"
+#include "Cubo_Disparador.h"
 
 class ADonkeyKong_SIS457;
 
@@ -39,79 +40,138 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 	{
 		player01->SetObstaculo(obstaculo01);
 	}//codigo de la pared en movimiento
-
 	FVector posicionInicial = FVector(1160.0f, -1100.0f, 400.f);
-	FRotator rotacionInicial = FRotator(0.0f, 0.0f, 10.0f);
 	FTransform SpawnLocationCP;
 	float anchoComponentePlataforma = 600.0f;
-	float incrementoAltoComponentePlataforma = -105.0f;
-	float incrementoAltoEntrePisos = 800.0f;
-	float incrementoInicioPiso = 100.0f;
+	float incrementoAltoComponentePlataforma = 0.0f;
+	float incrementoAltoEntrePisos = 500.0f;
+	float incrementoInicioPiso = 200.0f;
 
 	for (int npp = 0; npp < 5; npp++) {
-		rotacionInicial.Roll = rotacionInicial.Roll * -1;
 		incrementoInicioPiso = incrementoInicioPiso * -1;
 		incrementoAltoComponentePlataforma = incrementoAltoComponentePlataforma * -1;
-		SpawnLocationCP.SetRotation(FQuat(rotacionInicial));
 
-		SpawnLocationCP.SetRotation(FQuat(rotacionInicial));
 		for (int ncp = 0; ncp < 5; ncp++) {
-			SpawnLocationCP.SetLocation(FVector(posicionInicial.X, posicionInicial.Y + anchoComponentePlataforma * ncp, posicionInicial.Z));
-			Plataforma.Add(GetWorld()->SpawnActor<APlataforma>(APlataforma::StaticClass(), SpawnLocationCP));
-			if(ncp < 4){
+			// Generar la ubicación de la plataforma
+			FVector posicionActual = FVector(posicionInicial.X, posicionInicial.Y + anchoComponentePlataforma * ncp, posicionInicial.Z);
+			SpawnLocationCP.SetLocation(posicionActual);
+
+			// Spawnear la plataforma
+			APlataforma* NuevaPlataforma = GetWorld()->SpawnActor<APlataforma>(APlataforma::StaticClass(), SpawnLocationCP);
+
+			if (NuevaPlataforma) {
+				// Almacenar en el TMap con la posición como clave
+				MapaPlataformas.Add(posicionActual, NuevaPlataforma);
+			}
+			// Modificar la altura si no es la última en la fila
+			if (ncp < 4) {
 				posicionInicial.Z = posicionInicial.Z + incrementoAltoComponentePlataforma;
 			}
+
 		}
+
+		// Cambiar al siguiente piso
 		posicionInicial.Z = posicionInicial.Z + incrementoAltoEntrePisos;
 		posicionInicial.Y = posicionInicial.Y + incrementoInicioPiso;
+
+		// Iterar sobre el TMap para mostrar los elementos almacenados (aquí es donde añades el código)
+		for (const TPair<FVector, APlataforma*>& Elem : MapaPlataformas)
+		{
+			FVector Posicion = Elem.Key; // La clave es la posición FVector
+			APlataforma* Plataforma = Elem.Value; // El valor es el puntero a la plataforma
+
+			if (Plataforma)
+			{
+				//FString Mensaje = FString::Printf(TEXT("Plataforma en Posicion: %s"), *Posicion.ToString());
+				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Green, Mensaje);
+			}
+		}
+
+		// Seleccionar plataformas aleatorias para mover
+		TArray<APlataforma*> PlataformasSeleccionadas;
+		for (auto& Elem : MapaPlataformas)
+		{
+			if (FMath::RandRange(0, 1) == 0) // Probabilidad de 50% para seleccionar una plataforma
+			{
+				PlataformasSeleccionadas.Add(Elem.Value);
+			}
+		}
+
+		// Activar el movimiento en las plataformas seleccionadas
+		for (APlataforma* Plataforma : PlataformasSeleccionadas)
+		{
+			if (Plataforma)
+			{
+				Plataforma->bMoviendose = true; // Activa el movimiento para las plataformas seleccionadas
+			}
+		}
+
+
+		// Crear plataformas pequeñas
+		TArray<FVector> posicionesPequenas = {
+			FVector(1200.0f, 1700.0f, 630.0f),
+			FVector(1200.0f, -1700.0f, 1170.f),
+			FVector(1200.0f, 1700.0f, 1630.f),
+			FVector(1200.0f, -1700.0f, 2150.f)
+		};
+
+		for (int i = 0; i < posicionesPequenas.Num(); ++i) {
+			FTransform SpawnLocationPlataformaPequena;
+			SpawnLocationPlataformaPequena.SetLocation(posicionesPequenas[i]);
+			FVector escalaPlataformaPequena = FVector(0.5f, 0.5f, 1.3f); // Ajusta según el tamaño deseado
+			SpawnLocationPlataformaPequena.SetScale3D(escalaPlataformaPequena);
+			// Cambiar el nombre de la variable local a 'PlataformaPequena'
+			APlataforma* PlataformaPequena = GetWorld()->SpawnActor<APlataforma>(APlataforma::StaticClass(), SpawnLocationPlataformaPequena);
+			// Usar el miembro de clase 'Plataforma' para almacenar las plataformas pequeñas
+			PlataformasPequenas.Add(PlataformaPequena);
+		}
+
 	}
-
-	// ********** Generación de la primera columna **********
-	FTransform SpawnLocationColumna1;
-	FVector posicionColumna1 = FVector(1210.0f, 1800.0f, 910.0f); // Posición de la primera columna
-	FRotator rotacionColumna1 = FRotator(0.0f, 0.0f, 90.0f); // Rotación de 90 grados en el eje Y
-
-	SpawnLocationColumna1.SetLocation(posicionColumna1);
-	SpawnLocationColumna1.SetRotation(FQuat(rotacionColumna1));
-
-	// Escala personalizada para la primera columna
-	FVector escalaColumna1 = FVector(0.5f, 25.5f, 3.0f); // Alargada en el eje Z (altura)
-	SpawnLocationColumna1.SetScale3D(escalaColumna1);
-
-	// Spawnea la primera plataforma como columna
-	APlataforma* columnaPlataforma1 = GetWorld()->SpawnActor<APlataforma>(APlataforma::StaticClass(), SpawnLocationColumna1);
-	Plataforma.Add(columnaPlataforma1);
-
-	// ********** Generación de la segunda columna **********
-	FTransform SpawnLocationColumna2;
-	FVector posicionColumna2 = FVector(1210.0f, -1730.0f, 910.0f); // Posición diferente para la segunda columna
-	FRotator rotacionColumna2 = FRotator(0.0f, 0.0f, 90.0f); // Mantiene la rotación de 90 grados en el eje Y
-
-	SpawnLocationColumna2.SetLocation(posicionColumna2);
-	SpawnLocationColumna2.SetRotation(FQuat(rotacionColumna2));
-
-	// Escala personalizada para la segunda columna (puedes cambiarla si lo deseas)
-	FVector escalaColumna2 = FVector(0.5f, 25.5f, 3.0f); // Diferente escala (más baja que la primera)
-	SpawnLocationColumna2.SetScale3D(escalaColumna2);
-
-	// Spawnea la segunda plataforma como columna
-	APlataforma* columnaPlataforma2 = GetWorld()->SpawnActor<APlataforma>(APlataforma::StaticClass(), SpawnLocationColumna2);
-	Plataforma.Add(columnaPlataforma2);
-
-	// ********** Fin de la generación de columnas **********
+	GenerarCubosAleatoriamente(5);
 
 }
 
-void ADonkeyKong_SIS457GameMode::SpawnBarril()
+void ADonkeyKong_SIS457GameMode::GenerarCubosAleatoriamente(int MaxCubos)
 {
-	if (numeroBarriles < 5) {
+	int NumCubosGenerados = 0;
 
-		// Definir la ubicación y rotación para el nuevo barril
-		FVector SpawnLocation = FVector(1160.0f, 550.0f, 800.0f); // Ajusta según sea necesario
-		FRotator SpawnRotation = FRotator(90.0f, 0.0f, 0.0f);
+	// Recorrer el mapa de plataformas y generar cubos
+	for (auto& Elem : MapaPlataformas)
+	{
+		if (NumCubosGenerados >= MaxCubos)
+		{
+			break; // Detener si ya hemos generado el número máximo de cubos
+		}
 
-		// Crear el actor barril
-		barriles.Add(GetWorld()->SpawnActor<ABarril>(ABarril::StaticClass(), SpawnLocation, SpawnRotation));
-		numeroBarriles++;
+		APlataforma* Plataforma = Elem.Value;
+
+		if (Plataforma && FMath::RandBool()) // 50% de probabilidad de generar un cubo en esta plataforma
+		{
+			// Obtener la ubicación de la plataforma
+			FVector PlataformaLocation = Plataforma->GetActorLocation();
+			FVector PlataformaEscala = Plataforma->GetActorScale3D();
+
+			// Definir el ancho y largo de la plataforma según su escala (por ejemplo, eje Y para ancho y Z para alto)
+			float AnchoPlataforma = PlataformaEscala.Y * 100.0f;
+			float AlturaPlataforma = PlataformaEscala.Z * 100.0f;
+
+			// Generar una posición aleatoria en la plataforma
+			float RangoY = FMath::RandRange(-AnchoPlataforma / 2, AnchoPlataforma / 2);
+			float RangoZ = FMath::RandRange(0.0f, AlturaPlataforma); // Se genera solo sobre la plataforma
+
+			// La posición del cubo será aleatoria en los ejes Y y Z, pero el eje X será constante
+			FVector PosicionCubo = FVector(PlataformaLocation.X, PlataformaLocation.Y + RangoY, PlataformaLocation.Z + RangoZ + 50.0f);
+
+			// Generar el cubo
+			FTransform SpawnLocationCubo;
+			SpawnLocationCubo.SetLocation(PosicionCubo);
+
+			// Spawnear el cubo
+			ACubo_Disparador* NuevoCubo = GetWorld()->SpawnActor<ACubo_Disparador>(ACubo_Disparador::StaticClass(), SpawnLocationCubo);
+			if (NuevoCubo)
+			{
+				NumCubosGenerados++;
+			}
+		}
 	}
 }
