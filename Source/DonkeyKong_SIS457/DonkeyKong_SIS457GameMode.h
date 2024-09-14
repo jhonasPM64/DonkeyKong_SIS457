@@ -36,6 +36,7 @@ public:
 	TMap<FVector, APlataforma*> MapaPlataformas;
 	TMap<APlataforma*, TArray<APlataforma*>> MapaDePlataformas;
 	void GenerarCubosAleatoriamente(int MaxCubos = 5);
+	TArray<APlataforma*> PlataformasConCubos; // <- Añadir esto
 
 };
 

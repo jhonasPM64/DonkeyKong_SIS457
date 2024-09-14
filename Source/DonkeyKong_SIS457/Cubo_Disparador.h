@@ -20,8 +20,20 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UStaticMeshComponent* CuboMesh;
-	// Posición editable en el editor
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UStaticMeshComponent* CuboMesh;
 
+	//Para que dispare a la derecha
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector Fire;
 
+	float FireRate;
+
+	uint32 bCanFire : 1;
+
+	void FireShot();
+
+	FTimerHandle TimerHandle_ShotTimerExpired;
+	void ShotTimer();
 };
