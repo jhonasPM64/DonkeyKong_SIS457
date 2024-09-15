@@ -88,7 +88,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 		}*/
 
 		// Seleccionar plataformas aleatorias para mover
-		TArray<APlataforma*> PlataformasSeleccionadas;
+		/*TArray<APlataforma*> PlataformasSeleccionadas;
 		for (auto& Elem : MapaPlataformas)
 		{
 			if (FMath::RandRange(0, 1) == 0) // Probabilidad de 50% para seleccionar una plataforma
@@ -104,7 +104,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 			{
 				Plataforma->bMoviendose = true; // Activa el movimiento para las plataformas seleccionadas
 			}
-		}
+		}*/
 
 
 		// Crear plataformas pequeñas
@@ -127,7 +127,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 		}
 
 	}
-	GenerarCubosAleatoriamente(5);
+	GenerarCubosAleatoriamente(3);
 
 }
 

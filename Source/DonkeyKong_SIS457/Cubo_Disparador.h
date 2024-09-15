@@ -1,3 +1,5 @@
+
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -28,10 +30,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector Fire;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float FireRate;
 
-	uint32 bCanFire : 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float MovementSpeed;
 
+	uint32 bCanFire : 1;
 	void FireShot();
 
 	FTimerHandle TimerHandle_ShotTimerExpired;

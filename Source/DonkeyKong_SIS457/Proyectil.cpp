@@ -10,20 +10,20 @@ AProyectil::AProyectil()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> Projectile(TEXT("StaticMesh'/Game/Geometry/Meshes/ProyectilMesh/Shape_Sphere.Shape_Sphere'"));
-	ProyectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh_Projectile"));
-	ProyectileMesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
-	ProyectileMesh->SetStaticMesh(Projectile.Object);
-	ProyectileMesh->OnComponentHit.AddDynamic(this, &AProyectil::OnHit);
-	SetRootComponent(ProyectileMesh);
+	ProyectilMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh_Projectile"));
+	ProyectilMesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
+	ProyectilMesh->SetStaticMesh(Projectile.Object);
+	ProyectilMesh->OnComponentHit.AddDynamic(this, &AProyectil::OnHit);
+	SetRootComponent(ProyectilMesh);
 
-	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement_Projectile"));
-	ProjectileMovement->UpdatedComponent = ProyectileMesh;
-	ProjectileMovement->InitialSpeed = 2500.f;
-	ProjectileMovement->MaxSpeed = 2500.f;
-	ProjectileMovement->bRotationFollowsVelocity = true;
-	ProjectileMovement->bShouldBounce = false;
-	ProjectileMovement->ProjectileGravityScale = 0.f;
-
+	ProyectilMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement_Projectile"));
+	ProyectilMovement->UpdatedComponent = ProyectilMesh;
+	ProyectilMovement->InitialSpeed = 2500.f;
+	ProyectilMovement->MaxSpeed = 2500.f;
+	ProyectilMovement->bRotationFollowsVelocity = true;
+	ProyectilMovement->bShouldBounce = false;
+	ProyectilMovement->ProjectileGravityScale = 0.f;
+	
 	InitialLifeSpan = 2.f;
 }
 

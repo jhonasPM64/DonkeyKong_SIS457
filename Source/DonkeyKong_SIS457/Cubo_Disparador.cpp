@@ -1,6 +1,7 @@
 
 #include "Cubo_Disparador.h"
 #include "Proyectil.h"
+#include "TimerManager.h"
 
 // Sets default values
 ACubo_Disparador::ACubo_Disparador()
@@ -23,6 +24,12 @@ ACubo_Disparador::ACubo_Disparador()
 void ACubo_Disparador::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("proyectil"));
+
+	// Estableel cer temporizador para llamar a FireShot cada 'FireRate' segundos
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &ACubo_Disparador::FireShot, FireRate, true);
+
 }
 
 // Called every frame
@@ -30,31 +37,40 @@ void ACubo_Disparador::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//FireShot();
-
 }
 
 void ACubo_Disparador::FireShot()
 {
-	if (bCanFire == true) {
-		FVector DirectionRight = FVector(0.f, -1.f, 0.f);
-		FVector DirectionLeft = FVector(0.f, 1.f, 0.f);
-		const FRotator FireRotationRight = DirectionRight.Rotation();
-		const FRotator FireRotationLeft = DirectionLeft.Rotation();
-		const FVector SpawnLocationRight = GetActorLocation() + FireRotationRight.RotateVector(Fire);
-		const FVector SpawnLocationLeft = GetActorLocation() + FireRotationLeft.RotateVector(Fire);
-		UWorld* const World1 = GetWorld();
-		if (World1 != nullptr) {
-			//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Blue, FString::Printf(TEXT("Spawneo")));
-			World1->SpawnActor<ACubo_Disparador>(SpawnLocationRight, FireRotationRight);
-			World1->SpawnActor<ACubo_Disparador>(SpawnLocationLeft, FireRotationLeft);
-		}
-		bCanFire = false;
-		World1->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &ACubo_Disparador::ShotTimer, FireRate);
-	}
+    if (bCanFire) {
+        // Dirección en la que se disparan los proyectiles
+        FVector DirectionRight = FVector(1.f, 0.f, 0.f);
+        FVector DirectionLeft = FVector(-1.f, 0.f, 0.f);
+
+        // Rotación para los proyectiles
+        const FRotator FireRotationRight = DirectionRight.Rotation();
+        const FRotator FireRotationLeft = DirectionLeft.Rotation();
+
+        // Ubicación desde donde se dispararán los proyectiles
+        const FVector SpawnLocationRight = GetActorLocation() + FireRotationRight.RotateVector(Fire);
+        const FVector SpawnLocationLeft = GetActorLocation() + FireRotationLeft.RotateVector(Fire);
+
+        // Obtener el mundo actual
+        UWorld* const World = GetWorld();
+        if (World != nullptr) {
+            // Crear proyectiles en vez de cubos
+            World->SpawnActor<AProyectil>(SpawnLocationRight, FireRotationRight);  // Cambia ACubo_Disparador a AProyectil
+            World->SpawnActor<AProyectil>(SpawnLocationLeft, FireRotationLeft);   // Cambia ACubo_Disparador a AProyectil
+        }
+
+        // Deshabilitar el disparo hasta que ShotTimer vuelva a activarlo
+        bCanFire = false;
+        GetWorld()->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &ACubo_Disparador::ShotTimer, FireRate);
+    }
 }
 
 void ACubo_Disparador::ShotTimer()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("ShotTimer aqui"));
+
 	bCanFire = true;
 }
