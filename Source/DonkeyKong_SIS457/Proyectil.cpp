@@ -11,10 +11,12 @@ AProyectil::AProyectil()
 	PrimaryActorTick.bCanEverTick = true;
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> Projectile(TEXT("StaticMesh'/Game/Geometry/Meshes/ProyectilMesh/Shape_Sphere.Shape_Sphere'"));
 	ProyectilMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh_Projectile"));
-	ProyectilMesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
+	ProyectilMesh->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
 	ProyectilMesh->SetStaticMesh(Projectile.Object);
 	ProyectilMesh->OnComponentHit.AddDynamic(this, &AProyectil::OnHit);
 	SetRootComponent(ProyectilMesh);
+
+	ProyectilMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);  // Ignora a los personajes
 
 	ProyectilMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement_Projectile"));
 	ProyectilMovement->UpdatedComponent = ProyectilMesh;
@@ -43,7 +45,8 @@ void AProyectil::Tick(float DeltaTime)
 
 void AProyectil::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+	// Si el otro actor es un objeto que simula físicas, aplica un impulso
+	if (OtherActor && OtherActor != this && OtherComp && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 20.0f, GetActorLocation());
 	}

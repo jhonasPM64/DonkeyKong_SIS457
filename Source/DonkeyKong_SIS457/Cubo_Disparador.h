@@ -41,4 +41,10 @@ protected:
 
 	FTimerHandle TimerHandle_ShotTimerExpired;
 	void ShotTimer();
+
+	// Contador de proyectiles disparados
+	int32 ProjectileCount;
+
+	// Máximo de proyectiles permitidos
+	int32 MaxProjectiles;
 };
