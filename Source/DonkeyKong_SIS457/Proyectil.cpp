@@ -45,12 +45,13 @@ void AProyectil::Tick(float DeltaTime)
 
 void AProyectil::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	// Si el otro actor es un objeto que simula físicas, aplica un impulso
+	// Si el otro actor es un objeto que simula fÃ­sicas, aplica un impulso
 	if (OtherActor && OtherActor != this && OtherComp && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 20.0f, GetActorLocation());
 	}
 
-	this->Destroy();
+	// Destruye el proyectil
+	Destroy();
 }
 

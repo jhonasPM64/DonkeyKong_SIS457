@@ -34,13 +34,12 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 
 	FTransform SpawnLocation;
 	SpawnLocation.SetLocation(FVector(1160.0f, -210.0f, 140.0f));
-	SpawnLocation.SetRotation(FQuat(FRotator(0.0f, 0.0f, 0.0f)));
 	obstaculo01 = GetWorld()->SpawnActor<AObstaculo>(AObstaculo::StaticClass(), SpawnLocation);
 	if (player01 != nullptr)
 	{
 		player01->SetObstaculo(obstaculo01);
 	}//codigo de la pared en movimiento
-	FVector posicionInicial = FVector(1160.0f, -1100.0f, 400.f);
+	FVector posicionInicial = FVector(1200.0f, -1100.0f, 400.f);
 	FTransform SpawnLocationCP;
 	float anchoComponentePlataforma = 600.0f;
 	float incrementoAltoComponentePlataforma = 0.0f;

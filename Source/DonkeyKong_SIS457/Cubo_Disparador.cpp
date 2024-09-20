@@ -1,7 +1,8 @@
-
 #include "Cubo_Disparador.h"
 #include "Proyectil.h"
 #include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "DonkeyKong_SIS457Character.h"
 
 // Sets default values
 ACubo_Disparador::ACubo_Disparador()
@@ -20,7 +21,7 @@ ACubo_Disparador::ACubo_Disparador()
 	bCanFire = true;
 
     ProjectileCount = 0;   // Contador de proyectiles empieza en 0
-    MaxProjectiles = 999;  // N鷐ero m醲imo de proyectiles permitidos
+    MaxProjectiles = 999;  // Nmero mximo de proyectiles permitidos
 
 }
 
@@ -45,41 +46,46 @@ void ACubo_Disparador::Tick(float DeltaTime)
 
 void ACubo_Disparador::FireShot()
 {
-    // Verificar si ya hemos alcanzado el m醲imo de proyectiles
+    // Verificar si ya hemos alcanzado el mximo de proyectiles
     if (ProjectileCount >= MaxProjectiles) {
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("L韒ite de proyectiles alcanzado"));
-        return; // No generar m醩 proyectiles
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Lmite de proyectiles alcanzado"));
+        return; // No generar ms proyectiles
     }
 
     if (bCanFire) {
-        // Direcci髇 en la que se disparan los proyectiles
-        FVector DirectionRight = FVector(0.f, 1.f, 0.f);
-        FVector DirectionLeft = FVector(0.f, -1.f, 0.f);
+        // Obtener el personaje del jugador
+        ADonkeyKong_SIS457Character* Character = Cast<ADonkeyKong_SIS457Character>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+        
+        if (Character)
+        {
+            // Obtener la posici贸n X del personaje
+            float CharacterX = Character->GetActorLocation().X;
+            
+            // Direcci贸n en la que se disparan los proyectiles
+            FVector DirectionRight = FVector(0.f, 1.f, 0.f);
+            FVector DirectionLeft = FVector(0.f, -1.f, 0.f);
 
-        // Rotaci髇 para los proyectiles
-        const FRotator FireRotationRight = DirectionRight.Rotation();
-        const FRotator FireRotationLeft = DirectionLeft.Rotation();
+            // Rotaci贸n para los proyectiles
+            const FRotator FireRotationRight = DirectionRight.Rotation();
+            const FRotator FireRotationLeft = DirectionLeft.Rotation();
 
-        float MinDistanceBetweenProjectiles = 200.0f; // Ajusta este valor seg鷑 la distancia deseada
+            float MinDistanceBetweenProjectiles = 200.0f; // Ajusta este valor segn la distancia deseada
 
-        // Ubicaci髇 desde donde se disparar醤 los proyectiles, aplicando una distancia m韓ima
-        const FVector SpawnLocationRight = GetActorLocation() + FireRotationRight.RotateVector(Fire) + DirectionRight * MinDistanceBetweenProjectiles;
-        const FVector SpawnLocationLeft = GetActorLocation() + FireRotationLeft.RotateVector(Fire) + DirectionLeft * MinDistanceBetweenProjectiles;
+            // Ubicaci贸n desde donde se disparar谩n los proyectiles, usando la X del personaje
+            const FVector SpawnLocationRight = FVector(CharacterX, GetActorLocation().Y, GetActorLocation().Z) + FireRotationRight.RotateVector(Fire) + DirectionRight * MinDistanceBetweenProjectiles;
+            const FVector SpawnLocationLeft = FVector(CharacterX, GetActorLocation().Y, GetActorLocation().Z) + FireRotationLeft.RotateVector(Fire) + DirectionLeft * MinDistanceBetweenProjectiles;
 
-        // Obtener el mundo actual
-        UWorld* const World = GetWorld();
-        if (World != nullptr) {
-            // Crear proyectiles
-            World->SpawnActor<AProyectil>(SpawnLocationRight, FireRotationRight);
-            World->SpawnActor<AProyectil>(SpawnLocationLeft, FireRotationLeft);
+            // Obtener el mundo actual
+            UWorld* const World = GetWorld();
+            if (World != nullptr) {
+                // Crear proyectiles
+                World->SpawnActor<AProyectil>(SpawnLocationRight, FireRotationRight);
+                World->SpawnActor<AProyectil>(SpawnLocationLeft, FireRotationLeft);
 
-            // Incrementar el contador de proyectiles
-            ProjectileCount += 2; // Disparamos dos proyectiles, uno hacia la derecha y otro hacia la izquierda
+                // Incrementar el contador de proyectiles
+                ProjectileCount += 2; // Disparamos dos proyectiles, uno hacia la derecha y otro hacia la izquierda
+            }
         }
-
-        // Deshabilitar el disparo hasta que el temporizador vuelva a activarlo
-        //bCanFire = false;
-        //GetWorld()->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &ACubo_Disparador::ShotTimer, FireRate);
     }
 }
 

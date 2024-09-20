@@ -46,10 +46,9 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-public:
-	AObstaculo* AObstaculo01;
 
-public:
+	AObstaculo* AObstaculo01;
+	
 	FORCEINLINE AObstaculo* GetObstaculo() const { return AObstaculo01; }
 	FORCEINLINE void SetObstaculo(AObstaculo* _obstaculo) { AObstaculo01 = _obstaculo; }
 };
