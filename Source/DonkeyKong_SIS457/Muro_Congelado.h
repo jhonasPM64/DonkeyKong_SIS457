@@ -30,7 +30,16 @@ public:
 	// Factor de reducción de velocidad
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Muro_Congelado")
 	float FactorReduccionVelocidad;
+
+	// Progreso acumulado de la congelación (entre 0 y 1)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Muro_Congelado")
+	float ProgresoCongelacion;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Muro_Congelado")
+	float VelocidadCongelacion;
+
 protected:
 	// Función para aplicar la reducción de velocidad al personaje
-	void AplicarEfectoCongelacion(ACharacter* Personaje, float Distancia);
+	void AplicarEfectoCongelacion(ACharacter* Personaje, float Distancia, float DeltaTime);
+
 };

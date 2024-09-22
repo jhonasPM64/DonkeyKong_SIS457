@@ -15,9 +15,11 @@ AMuro_Congelado::AMuro_Congelado()
 	if (Muro_Congelado.Succeeded()) {
 		MeshMuro->SetMaterial(0, Muro_Congelado.Object);
 	}
-	// Definir valores por defecto
-	RadioDeCongelacion = 500.0f;
-	FactorReduccionVelocidad = 0.5f;
+    // Definir valores por defecto
+    RadioDeCongelacion = 1000.0f;
+    FactorReduccionVelocidad = 0.5f;
+    ProgresoCongelacion = 0.0f;  // Inicialmente no congelado
+    VelocidadCongelacion = 0.1f; // A qué ritmo el personaje se congela por tick
 }
 
 void AMuro_Congelado::BeginPlay()
@@ -27,31 +29,41 @@ void AMuro_Congelado::BeginPlay()
 
 void AMuro_Congelado::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-    // Obtener el personaje principal
     ACharacter* Personaje = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
     if (Personaje)
     {
-        // Calcular la distancia entre el muro y el personaje
         float Distancia = FVector::Dist(GetActorLocation(), Personaje->GetActorLocation());
 
-        // Si el personaje está dentro del radio de congelación, reducir la velocidad
+        // Si el personaje está dentro del rango de congelación
         if (Distancia <= RadioDeCongelacion)
         {
-            AplicarEfectoCongelacion(Personaje, Distancia);
+            AplicarEfectoCongelacion(Personaje, Distancia, DeltaTime);
+        }
+        else
+        {
+            // Si el personaje sale del rango, reduce el progreso del congelamiento gradualmente
+            if (ProgresoCongelacion > 0.0f)
+            {
+                ProgresoCongelacion -= VelocidadCongelacion * DeltaTime;
+                ProgresoCongelacion = FMath::Clamp(ProgresoCongelacion, 0.0f, 1.0f);
+            }
         }
     }
 }
 
-void AMuro_Congelado::AplicarEfectoCongelacion(ACharacter* Personaje, float Distancia)
+void AMuro_Congelado::AplicarEfectoCongelacion(ACharacter* Personaje, float Distancia, float DeltaTime)
 {
-    // Calcular el porcentaje de congelación basado en la distancia
-    float ProporciónCongelación = FMath::Clamp(1.0f - (Distancia / RadioDeCongelacion), 0.0f, 1.0f);
+    // Calcular la proporción de congelación en función de la distancia
+    float ProporciónCongelación = 1.0f - (Distancia / RadioDeCongelacion);
+
+    // Acumular el progreso de congelación de manera gradual
+    ProgresoCongelacion += VelocidadCongelacion * DeltaTime * ProporciónCongelación;
+    ProgresoCongelacion = FMath::Clamp(ProgresoCongelacion, 0.0f, 1.0f);
 
     // Obtener la velocidad actual del personaje
     float VelocidadActual = Personaje->GetCharacterMovement()->MaxWalkSpeed;
 
-    // Aplicar la reducción de velocidad
-    Personaje->GetCharacterMovement()->MaxWalkSpeed = FMath::Lerp(VelocidadActual, 0.0f, ProporciónCongelación);
+    // Aplicar la reducción gradual en función del progreso de congelación
+    Personaje->GetCharacterMovement()->MaxWalkSpeed = FMath::Lerp(VelocidadActual, 0.0f, ProgresoCongelacion);
 
 }
