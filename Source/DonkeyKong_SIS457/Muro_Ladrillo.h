@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Muro.h"
+#include "GameFramework/Actor.h"
 #include "Muro_Ladrillo.generated.h"
 
 UCLASS()
-class DONKEYKONG_SIS457_API AMuro_Ladrillo : public AMuro
+class DONKEYKONG_SIS457_API AMuro_Ladrillo : public AActor
 {
 	GENERATED_BODY()
 
@@ -22,6 +22,7 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Muro_Ladrillo")
-	UTexture2D* TextureLadrillo;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
+	class UStaticMeshComponent* MuroMesh;
 };

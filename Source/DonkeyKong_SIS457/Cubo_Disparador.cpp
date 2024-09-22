@@ -23,6 +23,9 @@ ACubo_Disparador::ACubo_Disparador()
     ProjectileCount = 0;   // Contador de proyectiles empieza en 0
     MaxProjectiles = 999;  // Nmero mximo de proyectiles permitidos
 
+    // Inicializar la posición de generación
+    SpawnLocation = FVector::ZeroVector;
+
 }
 
 // Called when the game starts or when spawned
@@ -46,45 +49,34 @@ void ACubo_Disparador::Tick(float DeltaTime)
 
 void ACubo_Disparador::FireShot()
 {
-    // Verificar si ya hemos alcanzado el mximo de proyectiles
+    // Verificar si ya hemos alcanzado el máximo de proyectiles
     if (ProjectileCount >= MaxProjectiles) {
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Lmite de proyectiles alcanzado"));
-        return; // No generar ms proyectiles
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Límite de proyectiles alcanzado"));
+        return; // No generar más proyectiles
     }
 
     if (bCanFire) {
-        // Obtener el personaje del jugador
-        ADonkeyKong_SIS457Character* Character = Cast<ADonkeyKong_SIS457Character>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-        
-        if (Character)
-        {
-            // Obtener la posición X del personaje
-            float CharacterX = Character->GetActorLocation().X;
-            
-            // Dirección en la que se disparan los proyectiles
-            FVector DirectionRight = FVector(0.f, 1.f, 0.f);
-            FVector DirectionLeft = FVector(0.f, -1.f, 0.f);
+        // Dirección en la que se disparan los proyectiles
+        FVector DirectionRight = FVector(0.f, 1.f, 0.f);
+        FVector DirectionLeft = FVector(0.f, -1.f, 0.f);
 
-            // Rotación para los proyectiles
-            const FRotator FireRotationRight = DirectionRight.Rotation();
-            const FRotator FireRotationLeft = DirectionLeft.Rotation();
+        // Rotación para los proyectiles
+        const FRotator FireRotationRight = DirectionRight.Rotation();
+        const FRotator FireRotationLeft = DirectionLeft.Rotation();
 
-            float MinDistanceBetweenProjectiles = 200.0f; // Ajusta este valor segn la distancia deseada
+        // Ubicación desde donde se dispararán los proyectiles, usando la posición de generación del cubo
+        const FVector SpawnLocationRight = FVector(SpawnLocation.X, SpawnLocation.Y + 100.0f, SpawnLocation.Z); // Ajusta este valor según la distancia lateral deseada
+        const FVector SpawnLocationLeft = FVector(SpawnLocation.X, SpawnLocation.Y - 100.0f, SpawnLocation.Z); // Ajusta este valor según la distancia lateral deseada
 
-            // Ubicación desde donde se dispararán los proyectiles, usando la X del personaje
-            const FVector SpawnLocationRight = FVector(CharacterX, GetActorLocation().Y, GetActorLocation().Z) + FireRotationRight.RotateVector(Fire) + DirectionRight * MinDistanceBetweenProjectiles;
-            const FVector SpawnLocationLeft = FVector(CharacterX, GetActorLocation().Y, GetActorLocation().Z) + FireRotationLeft.RotateVector(Fire) + DirectionLeft * MinDistanceBetweenProjectiles;
+        // Obtener el mundo actual
+        UWorld* const World = GetWorld();
+        if (World != nullptr) {
+            // Crear proyectiles
+            World->SpawnActor<AProyectil>(SpawnLocationRight, FireRotationRight);
+            World->SpawnActor<AProyectil>(SpawnLocationLeft, FireRotationLeft);
 
-            // Obtener el mundo actual
-            UWorld* const World = GetWorld();
-            if (World != nullptr) {
-                // Crear proyectiles
-                World->SpawnActor<AProyectil>(SpawnLocationRight, FireRotationRight);
-                World->SpawnActor<AProyectil>(SpawnLocationLeft, FireRotationLeft);
-
-                // Incrementar el contador de proyectiles
-                ProjectileCount += 2; // Disparamos dos proyectiles, uno hacia la derecha y otro hacia la izquierda
-            }
+            // Incrementar el contador de proyectiles
+            ProjectileCount += 2; // Disparamos dos proyectiles, uno hacia la derecha y otro hacia la izquierda
         }
     }
 }

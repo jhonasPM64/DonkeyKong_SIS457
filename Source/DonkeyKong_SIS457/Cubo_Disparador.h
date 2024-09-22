@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -14,6 +12,9 @@ class DONKEYKONG_SIS457_API ACubo_Disparador : public AActor
 public:
 	// Sets default values for this actor's properties
 	ACubo_Disparador();
+
+	// Nueva variable para almacenar la posición de generación
+	FVector SpawnLocation;
 
 protected:
 	// Called when the game starts or when spawned
@@ -45,6 +46,6 @@ protected:
 	// Contador de proyectiles disparados
 	int32 ProjectileCount;
 
-	// M�ximo de proyectiles permitidos
+	// Mximo de proyectiles permitidos
 	int32 MaxProjectiles;
 };

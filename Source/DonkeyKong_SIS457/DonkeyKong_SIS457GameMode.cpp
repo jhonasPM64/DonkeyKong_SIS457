@@ -51,7 +51,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 		incrementoAltoComponentePlataforma = incrementoAltoComponentePlataforma * -1;
 
 		for (int ncp = 0; ncp < 5; ncp++) {
-			// Generar la ubicación de la plataforma
+			// Generar la ubicaciÃ³n de la plataforma
 			FVector posicionActual = FVector(posicionInicial.X, posicionInicial.Y + anchoComponentePlataforma * ncp, posicionInicial.Z);
 			SpawnLocationCP.SetLocation(posicionActual);
 
@@ -59,10 +59,10 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 			APlataforma* NuevaPlataforma = GetWorld()->SpawnActor<APlataforma>(APlataforma::StaticClass(), SpawnLocationCP);
 
 			if (NuevaPlataforma) {
-				// Almacenar en el TMap con la posición como clave
+				// Almacenar en el TMap con la posiciÃ³n como clave
 				MapaPlataformas.Add(posicionActual, NuevaPlataforma);
 			}
-			// Modificar la altura si no es la última en la fila
+			// Modificar la altura si no es la Ãºltima en la fila
 			if (ncp < 4) {
 				posicionInicial.Z = posicionInicial.Z + incrementoAltoComponentePlataforma;
 			}
@@ -73,10 +73,10 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 		posicionInicial.Z = posicionInicial.Z + incrementoAltoEntrePisos;
 		posicionInicial.Y = posicionInicial.Y + incrementoInicioPiso;
 
-		// Iterar sobre el TMap para mostrar los elementos almacenados (aquí es donde añades el código)
+		// Iterar sobre el TMap para mostrar los elementos almacenados (aquÃ­ es donde aÃ±ades el cÃ³digo)
 		/*for (const TPair<FVector, APlataforma*>& Elem : MapaPlataformas)
 		{
-			FVector Posicion = Elem.Key; // La clave es la posición FVector
+			FVector Posicion = Elem.Key; // La clave es la posiciÃ³n FVector
 			APlataforma* Plataforma = Elem.Value; // El valor es el puntero a la plataforma
 
 			if (Plataforma)
@@ -106,7 +106,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 		}*/
 
 
-		// Crear plataformas pequeñas
+		// Crear plataformas pequeÃ±as
 		TArray<FVector> posicionesPequenas = {
 			FVector(1200.0f, 1700.0f, 630.0f),
 			FVector(1200.0f, -1700.0f, 1170.f),
@@ -117,11 +117,11 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 		for (int i = 0; i < posicionesPequenas.Num(); ++i) {
 			FTransform SpawnLocationPlataformaPequena;
 			SpawnLocationPlataformaPequena.SetLocation(posicionesPequenas[i]);
-			FVector escalaPlataformaPequena = FVector(0.5f, 0.5f, 1.3f); // Ajusta según el tamaño deseado
+			FVector escalaPlataformaPequena = FVector(0.5f, 0.5f, 1.3f); // Ajusta segÃºn el tamaÃ±o deseado
 			SpawnLocationPlataformaPequena.SetScale3D(escalaPlataformaPequena);
 			// Cambiar el nombre de la variable local a 'PlataformaPequena'
 			APlataforma* PlataformaPequena = GetWorld()->SpawnActor<APlataforma>(APlataforma::StaticClass(), SpawnLocationPlataformaPequena);
-			// Usar el miembro de clase 'Plataforma' para almacenar las plataformas pequeñas
+			// Usar el miembro de clase 'Plataforma' para almacenar las plataformas pequeÃ±as
 			PlataformasPequenas.Add(PlataformaPequena);
 		}
 
@@ -132,85 +132,91 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 
 void ADonkeyKong_SIS457GameMode::GenerarCubosAleatoriamente(int MaxCubos)
 {
-	int NumCubosGenerados = 0;
+    int NumCubosGenerados = 0;
 
-	// Recorrer el mapa de plataformas y generar cubos
-	for (auto& Elem : MapaPlataformas)
-	{
-		if (NumCubosGenerados >= MaxCubos)
-		{
-			break; // Detener si ya hemos generado el número máximo de cubos
-		}
+    // Recorrer el mapa de plataformas y generar cubos
+    for (auto& Elem : MapaPlataformas)
+    {
+        if (NumCubosGenerados >= MaxCubos)
+        {
+            break; // Detener si ya hemos generado el nÃºmero mÃ¡ximo de cubos
+        }
 
-		APlataforma* Plataforma = Elem.Value;
+        APlataforma* Plataforma = Elem.Value;
 
-		if (Plataforma && FMath::RandBool()) // 50% de probabilidad de generar un cubo en esta plataforma
-		{
-			// Obtener la ubicación de la plataforma
-			FVector PlataformaLocation = Plataforma->GetActorLocation();
-			FVector PlataformaEscala = Plataforma->GetActorScale3D();
-			// Definir el ancho y largo de la plataforma según su escala (eje Y para ancho y Z para altura)
-			float AnchoPlataforma = PlataformaEscala.Y * 100.0f;
+        if (Plataforma && FMath::RandBool()) // 50% de probabilidad de generar un cubo en esta plataforma
+        {
+            // Obtener la ubicaciÃ³n de la plataforma
+            FVector PlataformaLocation = Plataforma->GetActorLocation();
+            FVector PlataformaEscala = Plataforma->GetActorScale3D();
+            // Definir el ancho y largo de la plataforma segÃºn su escala (eje Y para ancho y Z para altura)
+            float AnchoPlataforma = PlataformaEscala.Y * 100.0f;
 
-			// Generar una posición aleatoria en el ancho (eje Y) de la plataforma
-			float RangoY = FMath::RandRange(-AnchoPlataforma / 2, AnchoPlataforma / 2);
+            // Generar una posiciÃ³n aleatoria en el ancho (eje Y) de la plataforma
+            float RangoY = FMath::RandRange(-AnchoPlataforma / 2, AnchoPlataforma / 2);
 
-			// En lugar de usar un rango aleatorio para Z, colocamos el cubo justo encima de la plataforma
-			float AlturaSobrePlataforma = PlataformaLocation.Z + (PlataformaEscala.Z * 50.0f) + 50.0f; // Ajuste de altura
+            // En lugar de usar un rango aleatorio para Z, colocamos el cubo justo encima de la plataforma
+            float AlturaSobrePlataforma = PlataformaLocation.Z + (PlataformaEscala.Z * 50.0f) + 50.0f; // Ajuste de altura
 
-			// La posición del cubo será aleatoria en el eje Y, pero la altura Z será fija para estar encima de la plataforma
-			FVector PosicionCubo = FVector(PlataformaLocation.X, PlataformaLocation.Y + RangoY, AlturaSobrePlataforma);
+            // La posiciÃ³n del cubo serÃ¡ aleatoria en el eje Y, pero la altura Z serÃ¡ fija para estar encima de la plataforma
+            FVector PosicionCubo = FVector(PlataformaLocation.X, PlataformaLocation.Y + RangoY, AlturaSobrePlataforma);
 
-			// Generar el cubo
-			FTransform SpawnLocationCubo;
-			SpawnLocationCubo.SetLocation(PosicionCubo);
-			// Spawnear el cubo
-			ACubo_Disparador* NuevoCubo = GetWorld()->SpawnActor<ACubo_Disparador>(ACubo_Disparador::StaticClass(), SpawnLocationCubo);
-			if (NuevoCubo)
-			{
-				NumCubosGenerados++;
-			}
-		}
-	}
-	// Si no se han generado suficientes cubos, hacer una segunda pasada por plataformas sin cubos
-	if (NumCubosGenerados < MaxCubos)
-	{
-		for (auto& Elem : MapaPlataformas)
-		{
-			if (NumCubosGenerados >= MaxCubos)
-			{
-				break;
-			}
+            // Generar el cubo
+            FTransform SpawnLocationCubo;
+            SpawnLocationCubo.SetLocation(PosicionCubo);
+            // Spawnear el cubo
+            ACubo_Disparador* NuevoCubo = GetWorld()->SpawnActor<ACubo_Disparador>(ACubo_Disparador::StaticClass(), SpawnLocationCubo);
+            if (NuevoCubo)
+            {
+                // Almacenar la posiciÃ³n de generaciÃ³n en el cubo
+                NuevoCubo->SpawnLocation = PosicionCubo;
 
-			APlataforma* Plataforma = Elem.Value;
+                NumCubosGenerados++;
+            }
+        }
+    }
+    // Si no se han generado suficientes cubos, hacer una segunda pasada por plataformas sin cubos
+    if (NumCubosGenerados < MaxCubos)
+    {
+        for (auto& Elem : MapaPlataformas)
+        {
+            if (NumCubosGenerados >= MaxCubos)
+            {
+                break;
+            }
 
-			// Generar cubo en plataformas que no recibieron uno en la primera pasada
-			if (Plataforma && !PlataformasConCubos.Contains(Plataforma))
-			{
-				FVector PlataformaLocation = Plataforma->GetActorLocation();
-				FVector PlataformaEscala = Plataforma->GetActorScale3D();
+            APlataforma* Plataforma = Elem.Value;
 
-				// Definir el ancho de la plataforma (eje Y)
-				float AnchoPlataforma = PlataformaEscala.Y * 100.0f;
+            // Generar cubo en plataformas que no recibieron uno en la primera pasada
+            if (Plataforma && !PlataformasConCubos.Contains(Plataforma))
+            {
+                FVector PlataformaLocation = Plataforma->GetActorLocation();
+                FVector PlataformaEscala = Plataforma->GetActorScale3D();
 
-				// Generar una posición aleatoria en el ancho de la plataforma
-				float RangoY = FMath::RandRange(-AnchoPlataforma / 2, AnchoPlataforma / 2);
+                // Definir el ancho de la plataforma (eje Y)
+                float AnchoPlataforma = PlataformaEscala.Y * 100.0f;
 
-				// Colocar el cubo justo encima de la plataforma
-				float AlturaSobrePlataforma = PlataformaLocation.Z + (PlataformaEscala.Z * 50.0f) + 50.0f;
+                // Generar una posiciÃ³n aleatoria en el ancho de la plataforma
+                float RangoY = FMath::RandRange(-AnchoPlataforma / 2, AnchoPlataforma / 2);
 
-				FVector PosicionCubo = FVector(PlataformaLocation.X, PlataformaLocation.Y + RangoY, AlturaSobrePlataforma);
+                // Colocar el cubo justo encima de la plataforma
+                float AlturaSobrePlataforma = PlataformaLocation.Z + (PlataformaEscala.Z * 50.0f) + 50.0f;
 
-				FTransform SpawnLocationCubo;
-				SpawnLocationCubo.SetLocation(PosicionCubo);
+                FVector PosicionCubo = FVector(PlataformaLocation.X, PlataformaLocation.Y + RangoY, AlturaSobrePlataforma);
 
-				ACubo_Disparador* NuevoCubo = GetWorld()->SpawnActor<ACubo_Disparador>(ACubo_Disparador::StaticClass(), SpawnLocationCubo);
-				if (NuevoCubo)
-				{
-					NumCubosGenerados++;
-					PlataformasConCubos.Add(Plataforma); // Registrar esta plataforma
-				}
-			}
-		}
-	}
+                FTransform SpawnLocationCubo;
+                SpawnLocationCubo.SetLocation(PosicionCubo);
+
+                ACubo_Disparador* NuevoCubo = GetWorld()->SpawnActor<ACubo_Disparador>(ACubo_Disparador::StaticClass(), SpawnLocationCubo);
+                if (NuevoCubo)
+                {
+                    // Almacenar la posiciÃ³n de generaciÃ³n en el cubo
+                    NuevoCubo->SpawnLocation = PosicionCubo;
+
+                    NumCubosGenerados++;
+                    PlataformasConCubos.Add(Plataforma); // Registrar esta plataforma
+                }
+            }
+        }
+    }
 }
