@@ -9,15 +9,9 @@
 #include "Obstaculo.h"
 #include "DonkeyKong_SIS457GameMode.h"
 #include "DonkeyKong_SIS457.h"
-#include "Kismet/GameplayStatics.h"
-#include "Engine/Engine.h"
-#include "TimerManager.h"
+
 ADonkeyKong_SIS457Character::ADonkeyKong_SIS457Character()
 {
-	// Inicializa la salud del personaje
-	MaxHealth = 100.0f;
-	Health = MaxHealth;
-
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -32,8 +26,8 @@ ADonkeyKong_SIS457Character::ADonkeyKong_SIS457Character()
 	CameraBoom->SetUsingAbsoluteRotation(true); // Rotation of the character should not affect rotation of boom
 	CameraBoom->bDoCollisionTest = false;
 	CameraBoom->TargetArmLength = 1500.f;
-	CameraBoom->SocketOffset = FVector(0.f,0.f,75.f);
-	CameraBoom->SetRelativeRotation(FRotator(0.f,180.f,0.f));
+	CameraBoom->SocketOffset = FVector(0.f, 0.f, 75.f);
+	CameraBoom->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
 
 	// Create a camera and attach to boom
 	SideViewCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
@@ -83,17 +77,12 @@ void ADonkeyKong_SIS457Character::BeginPlay()
 	{
 		AObstaculo01 = GameMode->GetObstaculo();
 	}
-	// Mostrar la salud inicial del personaje en la pantalla
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Salud inicial del personaje: %f"), Health));
-	}
 }
 
 void ADonkeyKong_SIS457Character::MoveRight(float Value)
 {
 	// add movement in that direction
-	AddMovementInput(FVector(0.f,-1.f,0.f), Value);
+	AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
 }
 
 void ADonkeyKong_SIS457Character::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
@@ -106,66 +95,3 @@ void ADonkeyKong_SIS457Character::TouchStopped(const ETouchIndex::Type FingerInd
 {
 	StopJumping();
 }
-
-void ADonkeyKong_SIS457Character::TakeDamage(float DamageAmount)
-{
-	if (!bIsDead)
-	{
-		Health -= DamageAmount;
-
-		// Mostrar salud en pantalla
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Salud del personaje: %f"), Health));
-		}
-
-		// Si la salud llega a 0, el personaje muere
-		if (Health <= 0.0f)
-		{
-			Die();
-		}
-	}
-}
-
-void ADonkeyKong_SIS457Character::Die()
-{
-	bIsDead = true;
-
-	// Mostrar mensaje de muerte
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("¡El personaje ha muerto!"));
-	}
-
-	// Deja el cuerpo del personaje en su posición actual
-	DetachFromControllerPendingDestroy();
-
-	// Reaparecer un nuevo personaje en el punto inicial
-	RespawnCharacter();
-}
-
-void ADonkeyKong_SIS457Character::RespawnCharacter()
-{
-	ADonkeyKong_SIS457GameMode* GameMode = Cast<ADonkeyKong_SIS457GameMode>(GetWorld()->GetAuthGameMode());
-	if (GameMode)
-	{
-		FVector SpawnLocation = GameMode->GetInitialSpawnLocation();
-		FRotator SpawnRotation = FRotator::ZeroRotator;
-
-		AActor* NewCharacter = GetWorld()->SpawnActor<ACharacter>(GetClass(), SpawnLocation, SpawnRotation);
-
-		AController* PlayerController = GetController();
-		if (PlayerController && NewCharacter)
-		{
-			PlayerController->Possess(Cast<APawn>(NewCharacter));
-
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("¡El personaje ha reaparecido!"));
-			}
-		}
-	}
-}
-
-
-

@@ -10,7 +10,7 @@ UCLASS()
 class DONKEYKONG_SIS457_API AMuro_electrico : public AMuro
 {
 	GENERATED_BODY()
-	
+
 public:
 	// Sets default values for this actor's properties
 	AMuro_electrico();
@@ -25,4 +25,7 @@ public:
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	// Valor de daño que el muro inflige al personaje
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Muro_electrico")
+	float DamageValue;
 };

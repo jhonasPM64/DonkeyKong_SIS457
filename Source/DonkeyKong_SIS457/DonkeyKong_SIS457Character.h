@@ -7,7 +7,7 @@
 #include "Obstaculo.h"
 #include "DonkeyKong_SIS457Character.generated.h"
 
-UCLASS(config=Game)
+UCLASS(config = Game)
 class ADonkeyKong_SIS457Character : public ACharacter
 {
 	GENERATED_BODY()
@@ -37,7 +37,7 @@ protected:
 	// End of APawn interface
 
 	void Parar();
-	bool detener=false;
+	bool detener = false;
 
 public:
 	ADonkeyKong_SIS457Character();
@@ -48,19 +48,7 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	AObstaculo* AObstaculo01;
-	
+
 	FORCEINLINE AObstaculo* GetObstaculo() const { return AObstaculo01; }
 	FORCEINLINE void SetObstaculo(AObstaculo* _obstaculo) { AObstaculo01 = _obstaculo; }
-
-	// Función para manejar el daño
-	UFUNCTION(BlueprintCallable, Category = "Health")
-	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-
-	// Función para matar al personaje
-	UFUNCTION(BlueprintCallable, Category = "Health")
-	void Die();
-
-	// Variable para la salud del personaje
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-	float Health;
 };
