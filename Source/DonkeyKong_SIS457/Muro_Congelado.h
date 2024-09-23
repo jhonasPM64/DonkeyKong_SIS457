@@ -23,15 +23,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Radio en el que el personaje comenzar· a reducir su velocidad
+	// Radio en el que el personaje comenzar√° a reducir su velocidad
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Muro_Congelado")
 	float RadioDeCongelacion;
 
-	// Factor de reducciÛn de velocidad
+	// Factor de reducci√≥n de velocidad
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Muro_Congelado")
 	float FactorReduccionVelocidad;
 
-	// Progreso acumulado de la congelaciÛn (entre 0 y 1)
+	// Progreso acumulado de la congelaci√≥n (entre 0 y 1)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Muro_Congelado")
 	float ProgresoCongelacion;
 
@@ -39,7 +39,7 @@ public:
 	float VelocidadCongelacion;
 
 protected:
-	// FunciÛn para aplicar la reducciÛn de velocidad al personaje
+	// Funci√≥n para aplicar la reducci√≥n de velocidad al personaje
 	void AplicarEfectoCongelacion(ACharacter* Personaje, float Distancia, float DeltaTime);
 
 };

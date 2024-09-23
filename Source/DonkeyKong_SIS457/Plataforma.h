@@ -12,8 +12,8 @@ UCLASS()
 class DONKEYKONG_SIS457_API APlataforma : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	APlataforma();
 
@@ -23,7 +23,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UStaticMeshComponent* meshPlataforma;
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

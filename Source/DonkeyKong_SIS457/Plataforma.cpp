@@ -7,7 +7,7 @@
 // Sets default values
 APlataforma::APlataforma()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Geometry/Meshes/1M_Cube.1M_Cube'"));
 
@@ -18,7 +18,7 @@ APlataforma::APlataforma()
 	FVector NewScale(2.0f, 6.0f, 0.5f);
 	SetActorScale3D(NewScale);
 
-	bMoviendose=false;
+	bMoviendose = false;
 	PosicionInicial = GetActorLocation();
 }
 
@@ -35,7 +35,7 @@ void APlataforma::MoverPlataforma(const FVector& NuevaPosicion)
 void APlataforma::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 
 }
 
@@ -43,7 +43,7 @@ void APlataforma::BeginPlay()
 void APlataforma::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-		if (bMoviendose)
+	if (bMoviendose)
 	{
 		FVector NuevaPosicion = GetActorLocation();
 
@@ -69,6 +69,3 @@ void APlataforma::SetupInputBindings()
 void APlataforma::CustomAction()
 {
 }
-
-
-

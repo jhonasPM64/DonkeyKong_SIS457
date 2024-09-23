@@ -7,7 +7,7 @@
 // Sets default values
 AProyectil::AProyectil()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> Projectile(TEXT("StaticMesh'/Game/Geometry/Meshes/ProyectilMesh/Shape_Sphere.Shape_Sphere'"));
 	ProyectilMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh_Projectile"));
@@ -25,7 +25,7 @@ AProyectil::AProyectil()
 	ProyectilMovement->bRotationFollowsVelocity = true;
 	ProyectilMovement->bShouldBounce = false;
 	ProyectilMovement->ProjectileGravityScale = 0.f;
-	
+
 	InitialLifeSpan = 2.f;
 }
 
@@ -33,7 +33,7 @@ AProyectil::AProyectil()
 void AProyectil::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -54,4 +54,3 @@ void AProyectil::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimit
 	// Destruye el proyectil
 	Destroy();
 }
-

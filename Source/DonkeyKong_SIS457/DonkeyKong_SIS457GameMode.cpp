@@ -8,6 +8,10 @@
 #include "Plataforma.h"
 #include "Barril.h"
 #include "Cubo_Disparador.h"
+#include "Muro_Congelado.h"
+#include "Muro_electrico.h"
+#include "Muro_Ladrillo.h"
+#include "Muro_pegajoso.h"
 
 class ADonkeyKong_SIS457;
 
@@ -22,8 +26,13 @@ ADonkeyKong_SIS457GameMode::ADonkeyKong_SIS457GameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 		player01 = Cast<ADonkeyKong_SIS457>(PlayerPawnBPClass.Class);
-
 	}
+	    // Inicializa el array de clases de obstáculos
+	Muro.Add(AMuro_Ladrillo::StaticClass());
+	Muro.Add(AMuro_Congelado::StaticClass());
+	Muro.Add(AMuro_pegajoso::StaticClass());
+	Muro.Add(AMuro_electrico::StaticClass());
+
 }
 
 void ADonkeyKong_SIS457GameMode::BeginPlay()
@@ -86,7 +95,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 			}
 		}*/
 
-		// Seleccionar plataformas aleatorias para mover
+		// Seleccionar exactamente 3 plataformas aleatorias para mover
 		TArray<APlataforma*> PlataformasSeleccionadas;
 		TArray<APlataforma*> TodasLasPlataformas;
 
@@ -100,7 +109,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 		}
 
 		// Asegurarnos de que haya al menos 3 plataformas
-		int32 NumPlataformasAMover = FMath::Max(3, FMath::RandRange(3, TodasLasPlataformas.Num()));
+		int32 NumPlataformasAMover = FMath::Min(3, TodasLasPlataformas.Num());
 
 		// Mezclar aleatoriamente el array de plataformas
 		for (int32 i = TodasLasPlataformas.Num() - 1; i > 0; --i)
@@ -109,8 +118,8 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 			TodasLasPlataformas.Swap(i, j);
 		}
 
-		// Seleccionar las primeras NumPlataformasAMover plataformas
-		for (int32 i = 0; i < NumPlataformasAMover && i < TodasLasPlataformas.Num(); ++i)
+		// Seleccionar exactamente las primeras 3 plataformas (o menos si no hay suficientes)
+		for (int32 i = 0; i < NumPlataformasAMover; ++i)
 		{
 			PlataformasSeleccionadas.Add(TodasLasPlataformas[i]);
 		}
@@ -124,7 +133,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 			}
 		}
 
-		// Desactivar el movimiento en las plataformas no seleccionadas
+		// Desactivar el movimiento en todas las demás plataformas
 		for (const auto& Elem : MapaPlataformas)
 		{
 			if (Elem.Value && !PlataformasSeleccionadas.Contains(Elem.Value))
@@ -154,6 +163,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 
 	}
 	GenerarCubosAleatoriamente(3);
+	GetWorld()->GetTimerManager().SetTimer(Timer, this, &ADonkeyKong_SIS457GameMode::GenerarMurosAleatorios, 3.F, true);
 
 }
 
@@ -246,4 +256,29 @@ void ADonkeyKong_SIS457GameMode::GenerarCubosAleatoriamente(int MaxCubos)
             }
         }
     }
+
+}
+
+void ADonkeyKong_SIS457GameMode::GenerarMurosAleatorios()
+{
+	FVector UbicacionAleatoria = FVector(FMath::FRandRange(830.f, 1500.f), -680.f, 240.f);
+	if (Muro.Num() > 0) {
+		IndiceAleatorio = FMath::FRandRange(0, Muro.Num() - 1);
+		MurosAleatorios = Muro[IndiceAleatorio];
+		if (MurosAleatorios) {
+			AMuro* NuevoMuro = GetWorld()->SpawnActor<AMuro>(MurosAleatorios, UbicacionAleatoria, FRotator::ZeroRotator);
+			if (NuevoMuro)
+			{
+				// Configurar un temporizador para destruir el muro después de 3 segundos
+				FTimerHandle TempTimer;
+				GetWorld()->GetTimerManager().SetTimer(TempTimer, [NuevoMuro]()
+					{
+						if (NuevoMuro)
+						{
+							NuevoMuro->Destroy();
+						}
+					}, 2.0f, false); // 3 segundos y no se repite
+			}
+		}
+	}
 }

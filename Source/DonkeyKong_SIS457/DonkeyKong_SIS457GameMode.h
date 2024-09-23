@@ -33,6 +33,16 @@ public:
 	void GenerarCubosAleatoriamente(int MaxCubos = 5);
 	TArray<APlataforma*> PlataformasConCubos; // <- Añadir esto
 
+protected:
+	TArray<TSubclassOf<class AMuro>> Muro;
+
+	FTimerHandle Timer;
+
+	void GenerarMurosAleatorios();
+
+	int32 IndiceAleatorio;
+
+	TSubclassOf<class AMuro> MurosAleatorios;
 };
 
 

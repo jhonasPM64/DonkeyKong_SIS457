@@ -32,16 +32,21 @@ void AMuro_Congelado::Tick(float DeltaTime)
     ACharacter* Personaje = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
     if (Personaje)
     {
-        float Distancia = FVector::Dist(GetActorLocation(), Personaje->GetActorLocation());
+        FVector DireccionPersonaje = Personaje->GetActorLocation() - GetActorLocation();
+        float DistanciaY = FMath::Abs(DireccionPersonaje.Y);
 
-        // Si el personaje está dentro del rango de congelación
-        if (Distancia <= RadioDeCongelacion)
+        // Verificar si hay obstáculos entre el muro y el personaje
+        FHitResult HitResult;
+        FCollisionQueryParams QueryParams;
+        QueryParams.AddIgnoredActor(this);
+
+        if (DistanciaY <= RadioDeCongelacion && !GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), Personaje->GetActorLocation(), ECC_Visibility, QueryParams))
         {
-            AplicarEfectoCongelacion(Personaje, Distancia, DeltaTime);
+            AplicarEfectoCongelacion(Personaje, DistanciaY, DeltaTime);
         }
         else
         {
-            // Si el personaje sale del rango, reduce el progreso del congelamiento gradualmente
+            // Si el personaje sale del rango o hay un obstáculo, reduce el progreso del congelamiento gradualmente
             if (ProgresoCongelacion > 0.0f)
             {
                 ProgresoCongelacion -= VelocidadCongelacion * DeltaTime;
