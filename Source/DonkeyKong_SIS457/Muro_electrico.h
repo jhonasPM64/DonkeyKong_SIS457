@@ -22,10 +22,11 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	// Funcion para detectar colision con el personaje
 	UFUNCTION()
-	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	// Valor de daño que el muro inflige al personaje
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Muro_electrico")
-	float DamageValue;
+	// Daño que causa el muro electrico
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MuroElectrico")
+	float Damage = 10.0f;
 };

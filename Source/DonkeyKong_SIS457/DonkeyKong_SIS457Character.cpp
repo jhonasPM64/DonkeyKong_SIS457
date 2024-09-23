@@ -12,6 +12,9 @@
 
 ADonkeyKong_SIS457Character::ADonkeyKong_SIS457Character()
 {
+
+	PrimaryActorTick.bCanEverTick = true;
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -46,6 +49,25 @@ ADonkeyKong_SIS457Character::ADonkeyKong_SIS457Character()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)zz
+}
+
+float ADonkeyKong_SIS457Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (DamageAmount > 0)
+	{
+		// Reducir salud
+		Health -= DamageAmount;
+
+		// Verificar si la salud llega a cero
+		if (Health <= 0)
+		{
+			// Aquí puedes manejar la muerte del personaje
+			Health = 0;
+			// Destruir al personaje o mostrar animación de muerte
+		}
+	}
+
+	return DamageAmount;
 }
 
 //////////////////////////////////////////////////////////////////////////

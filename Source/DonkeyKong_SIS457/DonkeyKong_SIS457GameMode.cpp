@@ -87,13 +87,32 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 		}*/
 
 		// Seleccionar plataformas aleatorias para mover
-		/*TArray<APlataforma*> PlataformasSeleccionadas;
-		for (auto& Elem : MapaPlataformas)
+		TArray<APlataforma*> PlataformasSeleccionadas;
+		TArray<APlataforma*> TodasLasPlataformas;
+
+		// Recolectar todas las plataformas únicas del MapaPlataformas
+		for (const auto& Elem : MapaPlataformas)
 		{
-			if (FMath::RandRange(0, 1) == 0) // Probabilidad de 50% para seleccionar una plataforma
+			if (Elem.Value)
 			{
-				PlataformasSeleccionadas.Add(Elem.Value);
+				TodasLasPlataformas.AddUnique(Elem.Value);
 			}
+		}
+
+		// Asegurarnos de que haya al menos 3 plataformas
+		int32 NumPlataformasAMover = FMath::Max(3, FMath::RandRange(3, TodasLasPlataformas.Num()));
+
+		// Mezclar aleatoriamente el array de plataformas
+		for (int32 i = TodasLasPlataformas.Num() - 1; i > 0; --i)
+		{
+			int32 j = FMath::RandRange(0, i);
+			TodasLasPlataformas.Swap(i, j);
+		}
+
+		// Seleccionar las primeras NumPlataformasAMover plataformas
+		for (int32 i = 0; i < NumPlataformasAMover && i < TodasLasPlataformas.Num(); ++i)
+		{
+			PlataformasSeleccionadas.Add(TodasLasPlataformas[i]);
 		}
 
 		// Activar el movimiento en las plataformas seleccionadas
@@ -103,8 +122,16 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 			{
 				Plataforma->bMoviendose = true; // Activa el movimiento para las plataformas seleccionadas
 			}
-		}*/
+		}
 
+		// Desactivar el movimiento en las plataformas no seleccionadas
+		for (const auto& Elem : MapaPlataformas)
+		{
+			if (Elem.Value && !PlataformasSeleccionadas.Contains(Elem.Value))
+			{
+				Elem.Value->bMoviendose = false;
+			}
+		}
 
 		// Crear plataformas pequeñas
 		TArray<FVector> posicionesPequenas = {

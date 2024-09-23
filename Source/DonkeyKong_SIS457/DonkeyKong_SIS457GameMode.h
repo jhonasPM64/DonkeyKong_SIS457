@@ -19,8 +19,6 @@ class ADonkeyKong_SIS457GameMode : public AGameModeBase
 
 public:
 	ADonkeyKong_SIS457GameMode();
-	// Declaración de la función para obtener la ubicación inicial del respawn
-	FVector GetInitialSpawnLocation() const;
 protected:
 	virtual void BeginPlay() override;
 
