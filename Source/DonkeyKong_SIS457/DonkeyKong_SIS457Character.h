@@ -56,7 +56,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float Health = 100.0f;
 
-	// Función para manejar el daño recibido
-	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	// Nueva función para cambiar la ubicación del personaje
+	void CambiarUbicacion(FVector NuevaUbicacion);
 
 };

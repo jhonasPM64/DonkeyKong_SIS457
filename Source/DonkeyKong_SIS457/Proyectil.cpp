@@ -11,7 +11,7 @@ AProyectil::AProyectil()
 	PrimaryActorTick.bCanEverTick = true;
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> Projectile(TEXT("StaticMesh'/Game/Geometry/Meshes/ProyectilMesh/Shape_Sphere.Shape_Sphere'"));
 	ProyectilMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh_Projectile"));
-	ProyectilMesh->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
+	ProyectilMesh->SetRelativeScale3D(FVector(0.4f, 0.05f, 0.4f));
 	ProyectilMesh->SetStaticMesh(Projectile.Object);
 	ProyectilMesh->OnComponentHit.AddDynamic(this, &AProyectil::OnHit);
 	SetRootComponent(ProyectilMesh);

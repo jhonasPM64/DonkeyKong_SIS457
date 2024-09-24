@@ -38,6 +38,7 @@ protected:
 	float MovementSpeed;
 
 	uint32 bCanFire : 1;
+
 	void FireShot();
 
 	FTimerHandle TimerHandle_ShotTimerExpired;

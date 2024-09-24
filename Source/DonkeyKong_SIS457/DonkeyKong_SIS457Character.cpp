@@ -51,25 +51,6 @@ ADonkeyKong_SIS457Character::ADonkeyKong_SIS457Character()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)zz
 }
 
-float ADonkeyKong_SIS457Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
-{
-	if (DamageAmount > 0)
-	{
-		// Reducir salud
-		Health -= DamageAmount;
-
-		// Verificar si la salud llega a cero
-		if (Health <= 0)
-		{
-			// Aquí puedes manejar la muerte del personaje
-			Health = 0;
-			// Destruir al personaje o mostrar animación de muerte
-		}
-	}
-
-	return DamageAmount;
-}
-
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -94,6 +75,10 @@ void ADonkeyKong_SIS457Character::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Establecer la nueva ubicación del personaje al inicio del juego
+	FVector NuevaUbicacion(1200.0f, 300.0f, 2500.0f); // Cambia estos valores a la ubicación deseada
+	CambiarUbicacion(NuevaUbicacion);
+
 	ADonkeyKong_SIS457* GameMode = Cast<ADonkeyKong_SIS457>(GetWorld()->GetAuthGameMode());
 	if (GameMode)
 	{
@@ -116,4 +101,9 @@ void ADonkeyKong_SIS457Character::TouchStarted(const ETouchIndex::Type FingerInd
 void ADonkeyKong_SIS457Character::TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	StopJumping();
+}
+
+void ADonkeyKong_SIS457Character::CambiarUbicacion(FVector NuevaUbicacion)
+{
+	SetActorLocation(NuevaUbicacion);
 }

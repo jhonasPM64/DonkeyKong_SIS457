@@ -27,6 +27,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Dirección de movimiento de la plataforma
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movimiento")
+	FVector DireccionMovimiento;
+
+	// Bandera para indicar si la plataforma se está moviendo
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movimiento")
 	bool bMoviendose;
 
 private:

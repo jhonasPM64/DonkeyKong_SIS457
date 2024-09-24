@@ -15,7 +15,7 @@ APlataforma::APlataforma()
 	meshPlataforma->SetStaticMesh(MeshAsset.Object);
 	RootComponent = meshPlataforma;
 
-	FVector NewScale(2.0f, 6.0f, 0.5f);
+	FVector NewScale(2.0f, 3.0f, 0.5f);
 	SetActorScale3D(NewScale);
 
 	bMoviendose = false;
@@ -47,14 +47,14 @@ void APlataforma::Tick(float DeltaTime)
 	{
 		FVector NuevaPosicion = GetActorLocation();
 
-		// Mover en el eje Z (arriba-abajo) o en el eje X (izquierda-derecha)
-		if (FMath::RandBool())
+		// Mover en la dirección especificada por DireccionMovimiento
+		if (DireccionMovimiento.Z != 0.0f) // Movimiento vertical (arriba-abajo)
 		{
 			NuevaPosicion.Z += FMath::Sin(GetWorld()->GetTimeSeconds()) * DeltaTime * 100.0f; // Oscilar en Z
 		}
-		else
+		else if (DireccionMovimiento.X != 0.0f) // Movimiento horizontal (izquierda-derecha)
 		{
-			NuevaPosicion.Y += FMath::Sin(GetWorld()->GetTimeSeconds()) * DeltaTime * 100.0f; // Oscilar en X
+			NuevaPosicion.X += FMath::Sin(GetWorld()->GetTimeSeconds()) * DeltaTime * 100.0f; // Oscilar en X
 		}
 
 		SetActorLocation(NuevaPosicion);

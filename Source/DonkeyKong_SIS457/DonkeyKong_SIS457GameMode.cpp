@@ -28,10 +28,10 @@ ADonkeyKong_SIS457GameMode::ADonkeyKong_SIS457GameMode()
 		player01 = Cast<ADonkeyKong_SIS457>(PlayerPawnBPClass.Class);
 	}
 	    // Inicializa el array de clases de obstáculos
-	Muro.Add(AMuro_Ladrillo::StaticClass());
+	/*Muro.Add(AMuro_Ladrillo::StaticClass());
 	Muro.Add(AMuro_Congelado::StaticClass());
 	Muro.Add(AMuro_pegajoso::StaticClass());
-	Muro.Add(AMuro_electrico::StaticClass());
+	Muro.Add(AMuro_electrico::StaticClass());*/
 
 }
 
@@ -41,16 +41,16 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, TEXT("Actor Spawning"));
 
-	FTransform SpawnLocation;
+	/*FTransform SpawnLocation;
 	SpawnLocation.SetLocation(FVector(1160.0f, -210.0f, 140.0f));
 	obstaculo01 = GetWorld()->SpawnActor<AObstaculo>(AObstaculo::StaticClass(), SpawnLocation);
 	if (player01 != nullptr)
 	{
 		player01->SetObstaculo(obstaculo01);
-	}//codigo de la pared en movimiento
-	FVector posicionInicial = FVector(1200.0f, -1100.0f, 400.f);
+	}//codigo de la pared en movimiento*/
+	FVector posicionInicial = FVector(1200.0f, -1300.0f, 400.f);
 	FTransform SpawnLocationCP;
-	float anchoComponentePlataforma = 600.0f;
+	float anchoComponentePlataforma = 300.0f;
 	float incrementoAltoComponentePlataforma = 0.0f;
 	float incrementoAltoEntrePisos = 500.0f;
 	float incrementoInicioPiso = 200.0f;
@@ -59,7 +59,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 		incrementoInicioPiso = incrementoInicioPiso * -1;
 		incrementoAltoComponentePlataforma = incrementoAltoComponentePlataforma * -1;
 
-		for (int ncp = 0; ncp < 5; ncp++) {
+		for (int ncp = 0; ncp < 10; ncp++) {
 			// Generar la ubicación de la plataforma
 			FVector posicionActual = FVector(posicionInicial.X, posicionInicial.Y + anchoComponentePlataforma * ncp, posicionInicial.Z);
 			SpawnLocationCP.SetLocation(posicionActual);
@@ -69,7 +69,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 
 			if (NuevaPlataforma) {
 				// Almacenar en el TMap con la posición como clave
-				MapaPlataformas.Add(posicionActual, NuevaPlataforma);
+				Plataformas.Add(NuevaPlataforma);
 			}
 			// Modificar la altura si no es la última en la fila
 			if (ncp < 4) {
@@ -95,33 +95,29 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 			}
 		}*/
 
-		// Seleccionar exactamente 3 plataformas aleatorias para mover
+		// Seleccionar exactamente 2 plataformas aleatorias para mover
 		TArray<APlataforma*> PlataformasSeleccionadas;
-		TArray<APlataforma*> TodasLasPlataformas;
 
 		// Recolectar todas las plataformas únicas del MapaPlataformas
-		for (const auto& Elem : MapaPlataformas)
-		{
-			if (Elem.Value)
-			{
-				TodasLasPlataformas.AddUnique(Elem.Value);
-			}
-		}
-
-		// Asegurarnos de que haya al menos 3 plataformas
-		int32 NumPlataformasAMover = FMath::Min(3, TodasLasPlataformas.Num());
-
-		// Mezclar aleatoriamente el array de plataformas
-		for (int32 i = TodasLasPlataformas.Num() - 1; i > 0; --i)
+		for (int32 i = Plataformas.Num() - 1; i > 0; --i)
 		{
 			int32 j = FMath::RandRange(0, i);
-			TodasLasPlataformas.Swap(i, j);
+			Plataformas.Swap(i, j);
 		}
 
-		// Seleccionar exactamente las primeras 3 plataformas (o menos si no hay suficientes)
-		for (int32 i = 0; i < NumPlataformasAMover; ++i)
+		// Seleccionar exactamente las primeras 2 plataformas (o menos si no hay suficientes)
+		for (int32 i = 0; i < FMath::Min(2, Plataformas.Num()); ++i)
 		{
-			PlataformasSeleccionadas.Add(TodasLasPlataformas[i]);
+			PlataformasSeleccionadas.Add(Plataformas[i]);
+		}
+
+		// Desactivar el movimiento en todas las plataformas antes de activar las seleccionadas
+		for (APlataforma* Plataforma : Plataformas)
+		{
+			if (Plataforma)
+			{
+				Plataforma->bMoviendose = false;
+			}
 		}
 
 		// Activar el movimiento en las plataformas seleccionadas
@@ -129,16 +125,21 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 		{
 			if (Plataforma)
 			{
-				Plataforma->bMoviendose = true; // Activa el movimiento para las plataformas seleccionadas
-			}
-		}
+				Plataforma->bMoviendose = true;
 
-		// Desactivar el movimiento en todas las demás plataformas
-		for (const auto& Elem : MapaPlataformas)
-		{
-			if (Elem.Value && !PlataformasSeleccionadas.Contains(Elem.Value))
-			{
-				Elem.Value->bMoviendose = false;
+				// Definir la dirección de movimiento
+				int32 RandomDirection = FMath::RandRange(0, 1); // 0 para vertical, 1 para horizontal
+
+				if (RandomDirection == 0)
+				{
+					// Movimiento vertical (arriba/abajo)
+					Plataforma->DireccionMovimiento = FVector(0.f, 0.f, 1.f); // Ajusta según tu lógica de movimiento
+				}
+				else
+				{
+					// Movimiento horizontal (derecha/izquierda)
+					Plataforma->DireccionMovimiento = FVector(1.f, 0.f, 0.f); // Ajusta según tu lógica de movimiento
+				}
 			}
 		}
 
@@ -163,7 +164,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 
 	}
 	GenerarCubosAleatoriamente(3);
-	GetWorld()->GetTimerManager().SetTimer(Timer, this, &ADonkeyKong_SIS457GameMode::GenerarMurosAleatorios, 3.F, true);
+//	GetWorld()->GetTimerManager().SetTimer(Timer, this, &ADonkeyKong_SIS457GameMode::GenerarMurosAleatorios, 3.F, true);
 
 }
 
@@ -172,14 +173,12 @@ void ADonkeyKong_SIS457GameMode::GenerarCubosAleatoriamente(int MaxCubos)
     int NumCubosGenerados = 0;
 
     // Recorrer el mapa de plataformas y generar cubos
-    for (auto& Elem : MapaPlataformas)
+    for (APlataforma* Plataforma : Plataformas)
     {
         if (NumCubosGenerados >= MaxCubos)
         {
             break; // Detener si ya hemos generado el número máximo de cubos
         }
-
-        APlataforma* Plataforma = Elem.Value;
 
         if (Plataforma && FMath::RandBool()) // 50% de probabilidad de generar un cubo en esta plataforma
         {
@@ -215,18 +214,16 @@ void ADonkeyKong_SIS457GameMode::GenerarCubosAleatoriamente(int MaxCubos)
     // Si no se han generado suficientes cubos, hacer una segunda pasada por plataformas sin cubos
     if (NumCubosGenerados < MaxCubos)
     {
-        for (auto& Elem : MapaPlataformas)
+        for (APlataforma* Plataforma : Plataformas)
         {
             if (NumCubosGenerados >= MaxCubos)
             {
                 break;
             }
 
-            APlataforma* Plataforma = Elem.Value;
-
             // Generar cubo en plataformas que no recibieron uno en la primera pasada
-            if (Plataforma && !PlataformasConCubos.Contains(Plataforma))
-            {
+			if (Plataforma && !PlataformasConCubos.Contains(Plataforma))
+			{
                 FVector PlataformaLocation = Plataforma->GetActorLocation();
                 FVector PlataformaEscala = Plataforma->GetActorScale3D();
 
@@ -259,7 +256,7 @@ void ADonkeyKong_SIS457GameMode::GenerarCubosAleatoriamente(int MaxCubos)
 
 }
 
-void ADonkeyKong_SIS457GameMode::GenerarMurosAleatorios()
+/*void ADonkeyKong_SIS457GameMode::GenerarMurosAleatorios()
 {
 	FVector UbicacionAleatoria = FVector(FMath::FRandRange(830.f, 1500.f), -680.f, 240.f);
 	if (Muro.Num() > 0) {
@@ -281,4 +278,4 @@ void ADonkeyKong_SIS457GameMode::GenerarMurosAleatorios()
 			}
 		}
 	}
-}
+}*/

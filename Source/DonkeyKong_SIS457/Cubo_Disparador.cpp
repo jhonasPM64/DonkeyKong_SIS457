@@ -10,7 +10,7 @@ ACubo_Disparador::ACubo_Disparador()
 	// Set this actor to call Tick() every frame. You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMeshAsset(TEXT("StaticMesh'/Game/Geometry/Meshes/CuboMesh/Shape_Cube.Shape_Cube'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMeshAsset(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Cone.Shape_Cone'"));
 	CuboMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh_Cubo"));
 	CuboMesh->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 	CuboMesh->SetStaticMesh(CubeMeshAsset.Object);
@@ -56,13 +56,17 @@ void ACubo_Disparador::FireShot()
     }
 
     if (bCanFire) {
-        // Dirección en la que se disparan los proyectiles
-        FVector DirectionRight = FVector(0.f, 1.f, 0.f);
-        FVector DirectionLeft = FVector(0.f, -1.f, 0.f);
+        // Generar una dirección aleatoria en el plano XY para el primer proyectil
+        float RandomAngleRight = FMath::RandRange(0.0f, 360.0f);
+        FVector RandomDirectionRight = FVector(FMath::Cos(FMath::DegreesToRadians(RandomAngleRight)), FMath::Sin(FMath::DegreesToRadians(RandomAngleRight)), 0.0f);
+
+        // Generar una dirección aleatoria en el plano XY para el segundo proyectil
+        float RandomAngleLeft = FMath::RandRange(0.0f, 360.0f);
+        FVector RandomDirectionLeft = FVector(FMath::Cos(FMath::DegreesToRadians(RandomAngleLeft)), FMath::Sin(FMath::DegreesToRadians(RandomAngleLeft)), 0.0f);
 
         // Rotación para los proyectiles
-        const FRotator FireRotationRight = DirectionRight.Rotation();
-        const FRotator FireRotationLeft = DirectionLeft.Rotation();
+        const FRotator FireRotationRight = RandomDirectionRight.Rotation();
+        const FRotator FireRotationLeft = RandomDirectionLeft.Rotation();
 
         // Ubicación desde donde se dispararán los proyectiles, usando la posición de generación del cubo
         const FVector SpawnLocationRight = FVector(SpawnLocation.X, SpawnLocation.Y + 100.0f, SpawnLocation.Z); // Ajusta este valor según la distancia lateral deseada
@@ -76,7 +80,7 @@ void ACubo_Disparador::FireShot()
             World->SpawnActor<AProyectil>(SpawnLocationLeft, FireRotationLeft);
 
             // Incrementar el contador de proyectiles
-            ProjectileCount += 2; // Disparamos dos proyectiles, uno hacia la derecha y otro hacia la izquierda
+            ProjectileCount += 2; // Disparamos dos proyectiles en direcciones aleatorias
         }
     }
 }

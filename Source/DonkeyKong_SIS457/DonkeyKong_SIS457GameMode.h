@@ -28,12 +28,12 @@ public:
 	ABarril* barril01;
 
 	TArray<APlataforma*> PlataformasPequenas;  // Renombrado para evitar conflictos
-	TMap<FVector, APlataforma*> MapaPlataformas;
-	TMap<APlataforma*, TArray<APlataforma*>> MapaDePlataformas;
+	TArray<APlataforma*> Plataformas;  // Cambiado de MapaPlataformas a TArray
+	TMap<APlataforma*, TArray<APlataforma*>> MapaDePlataformas;  // Mantiene su función para el movimiento
 	void GenerarCubosAleatoriamente(int MaxCubos = 5);
 	TArray<APlataforma*> PlataformasConCubos; // <- Añadir esto
 
-protected:
+/*protected:
 	TArray<TSubclassOf<class AMuro>> Muro;
 
 	FTimerHandle Timer;
@@ -42,7 +42,7 @@ protected:
 
 	int32 IndiceAleatorio;
 
-	TSubclassOf<class AMuro> MurosAleatorios;
+	TSubclassOf<class AMuro> MurosAleatorios;*/
 };
 
 

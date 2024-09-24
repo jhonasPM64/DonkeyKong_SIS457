@@ -16,10 +16,10 @@ AMuro_Congelado::AMuro_Congelado()
 		MeshMuro->SetMaterial(0, Muro_Congelado.Object);
 	}
     // Definir valores por defecto
-    RadioDeCongelacion = 1000.0f;
+    RadioDeCongelacion = 500.0f;
     FactorReduccionVelocidad = 0.5f;
     ProgresoCongelacion = 0.0f;  // Inicialmente no congelado
-    VelocidadCongelacion = 0.1f; // A qué ritmo el personaje se congela por tick
+    VelocidadCongelacion = 0.08f; // A qué ritmo el personaje se congela por tick
 }
 
 void AMuro_Congelado::BeginPlay()
