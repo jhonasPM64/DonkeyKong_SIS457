@@ -1,3 +1,4 @@
+
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
@@ -37,11 +38,11 @@ protected:
 	// End of APawn interface
 
 	bool SaltoCargando;
-	float TiempoCargado; 
+	float TiempoCargado;
 	float MaxTiempo;
 
-	void SaltoCargado(); 
-	void Saltolisto(); 
+	void SaltoCargado();
+	void Saltolisto();
 
 	virtual void Tick(float DeltaTime) override;
 
@@ -49,9 +50,9 @@ protected:
 	bool detener = false;
 
 private:
-	TArray<AObstaculo*> Plataformas; 
-	void CrearPlataforma(); 
-	void EliminarPlataforma(); 
+	TArray<AObstaculo*> Plataformas;
+	void CrearPlataforma();
+	void EliminarPlataforma();
 
 public:
 	ADonkeyKong_SIS457Character();
@@ -70,7 +71,7 @@ public:
 	void CambiarUbicacion(FVector NuevaUbicacion);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Jump")
-	float BaseJumpVelocity = 600.0f; 
+	float BaseJumpVelocity = 600.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Jump")
-	float MaxJumpVelocity = 1700.0f; 
+	float MaxJumpVelocity = 1700.0f;
 };

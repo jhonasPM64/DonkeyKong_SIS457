@@ -6,13 +6,11 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Obstaculo.h"
 #include "DonkeyKong_SIS457GameMode.h"
 #include "DonkeyKong_SIS457.h"
 
 ADonkeyKong_SIS457Character::ADonkeyKong_SIS457Character()
 {
-
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Set size for collision capsule
@@ -47,9 +45,11 @@ ADonkeyKong_SIS457Character::ADonkeyKong_SIS457Character()
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->MaxFlySpeed = 600.f;
 
+	BaseJumpVelocity = 600.0f; // Valor base para la velocidad de salto
+	MaxJumpVelocity = 1200.0f; // Valor máximo para la velocidad de salto
 	SaltoCargando = false;
 	TiempoCargado = 0.0f;
-	MaxTiempo = 2.0f;
+	MaxTiempo = 2.0f; // Tiempo máximo de carga
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)zz
 }
@@ -78,11 +78,11 @@ void ADonkeyKong_SIS457Character::Saltolisto()
 {
 	SaltoCargando = false;
 
-	// Verifica si el personaje est en el suelo antes de permitir el salto
-	if (GetCharacterMovement()->IsFalling() == false)
+	// Verifica si el personaje está en el suelo antes de permitir el salto
+	if (!GetCharacterMovement()->IsFalling())
 	{
-		// Calcula la velocidad de salto segn el tiempo de carga
-		float JumpVelocity = FMath::Lerp(BaseJumpVelocity, MaxJumpVelocity, TiempoCargado / MaxTiempo);
+		// Calcula la velocidad de salto según el tiempo de carga
+		float JumpVelocity = FMath::Lerp(BaseJumpVelocity, MaxJumpVelocity, FMath::Clamp(TiempoCargado / MaxTiempo, 0.0f, 1.0f));
 
 		// Aplica la fuerza de salto
 		LaunchCharacter(FVector(0, 0, JumpVelocity), false, true);
@@ -94,27 +94,31 @@ void ADonkeyKong_SIS457Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// Lógica para crear plataformas al avanzar
-	CrearPlataforma();
+	// Incrementa el tiempo de carga si el salto está cargando
+	if (SaltoCargando)
+	{
+		TiempoCargado += DeltaTime; // Aumenta el tiempo de carga
+		TiempoCargado = FMath::Clamp(TiempoCargado, 0.0f, MaxTiempo); // Asegúrate de que no exceda el máximo
+	}
 }
 
-// Método para crear una nueva plataforma
+// Mtodo para crear una nueva plataforma
 void ADonkeyKong_SIS457Character::CrearPlataforma()
 {
 	if (Plataformas.Num() < 5) // Verifica si hay menos de 5 plataformas
 	{
-		FVector PosicionDeseada(1200.0f, -1700.0f, 2150.0f); // Coordenadas específicas
-		FRotator RotacionDeseada(0.f, 0.f, 90.f); // Rotación horizontal
+		FVector PosicionDeseada(1200.0f, -1700.0f, 2150.0f); // Coordenadas especficas
+		FRotator RotacionDeseada(0.f, 0.f, 90.f); // Rotacin horizontal
 		AObstaculo* NuevaPlataforma = GetWorld()->SpawnActor<AObstaculo>(AObstaculo::StaticClass(), PosicionDeseada, RotacionDeseada);
 		Plataformas.Add(NuevaPlataforma);
 	}
 	else
 	{
-		EliminarPlataforma(); // Elimina la plataforma más antigua si se supera el límite
+		EliminarPlataforma(); // Elimina la plataforma ms antigua si se supera el limite
 	}
 }
 
-// Método para eliminar la plataforma más antigua
+// Mtodo para eliminar la plataforma ms antigua
 void ADonkeyKong_SIS457Character::EliminarPlataforma()
 {
 	if (Plataformas.Num() > 0)
