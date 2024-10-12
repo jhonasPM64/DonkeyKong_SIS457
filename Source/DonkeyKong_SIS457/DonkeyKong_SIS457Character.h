@@ -36,8 +36,22 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
 
+	bool SaltoCargando;
+	float TiempoCargado; 
+	float MaxTiempo;
+
+	void SaltoCargado(); 
+	void Saltolisto(); 
+
+	virtual void Tick(float DeltaTime) override;
+
 	void Parar();
 	bool detener = false;
+
+private:
+	TArray<AObstaculo*> Plataformas; 
+	void CrearPlataforma(); 
+	void EliminarPlataforma(); 
 
 public:
 	ADonkeyKong_SIS457Character();
@@ -52,11 +66,11 @@ public:
 	FORCEINLINE AObstaculo* GetObstaculo() const { return AObstaculo01; }
 	FORCEINLINE void SetObstaculo(AObstaculo* _obstaculo) { AObstaculo01 = _obstaculo; }
 
-	// Sistema de salud del personaje
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-	float Health = 100.0f;
-
 	// Nueva función para cambiar la ubicación del personaje
 	void CambiarUbicacion(FVector NuevaUbicacion);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Jump")
+	float BaseJumpVelocity = 600.0f; 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Jump")
+	float MaxJumpVelocity = 1700.0f; 
 };

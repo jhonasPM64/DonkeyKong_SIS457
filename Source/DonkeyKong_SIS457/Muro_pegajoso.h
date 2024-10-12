@@ -17,22 +17,17 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// Para manejar mejor la colisión
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 		bool bFromSweep, const FHitResult& SweepResult);
 
-	// Método para liberar al personaje
 	void LiberarPersonaje();
 
-	// Referencia al personaje que se pega al muro
 	ACharacter* PegadoPersonaje;
 
-	// Controlador del temporizador
 	FTimerHandle TimerHandle;
 
-	// Tiempo que el personaje permanecerá pegado al muro (en segundos)
 	UPROPERTY(EditAnywhere, Category = "Muro_pegajoso")
 	float TiempoPegado;
 

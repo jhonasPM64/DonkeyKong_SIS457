@@ -11,7 +11,7 @@
 
 AMuro_Congelado::AMuro_Congelado()
 {
-	static ConstructorHelpers::FObjectFinder<UMaterial> Muro_Congelado(TEXT("Material'/Game/StarterContent/Materials/M_Water_Lake.M_Water_Lake'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> Muro_Congelado(TEXT("Material'/Game/Geometry/Meshes/MuroCongelado/M_Water_Lake.M_Water_Lake'"));
 	if (Muro_Congelado.Succeeded()) {
 		MeshMuro->SetMaterial(0, Muro_Congelado.Object);
 	}

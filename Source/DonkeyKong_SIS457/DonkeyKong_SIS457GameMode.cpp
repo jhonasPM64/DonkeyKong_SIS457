@@ -55,13 +55,14 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 	float incrementoAltoEntrePisos = 500.0f;
 	float incrementoInicioPiso = 200.0f;
 
-	for (int npp = 0; npp < 5; npp++) {
+	for (int npp = 0; npp < 4; npp++) {
 		incrementoInicioPiso = incrementoInicioPiso * -1;
 		incrementoAltoComponentePlataforma = incrementoAltoComponentePlataforma * -1;
 
 		for (int ncp = 0; ncp < 10; ncp++) {
 			// Generar la ubicación de la plataforma
 			FVector posicionActual = FVector(posicionInicial.X, posicionInicial.Y + anchoComponentePlataforma * ncp, posicionInicial.Z);
+
 			SpawnLocationCP.SetLocation(posicionActual);
 
 			// Spawnear la plataforma
@@ -95,23 +96,19 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 			}
 		}*/
 
-		// Seleccionar exactamente 2 plataformas aleatorias para mover
 		TArray<APlataforma*> PlataformasSeleccionadas;
 
-		// Recolectar todas las plataformas únicas del MapaPlataformas
 		for (int32 i = Plataformas.Num() - 1; i > 0; --i)
 		{
 			int32 j = FMath::RandRange(0, i);
 			Plataformas.Swap(i, j);
 		}
 
-		// Seleccionar exactamente las primeras 2 plataformas (o menos si no hay suficientes)
 		for (int32 i = 0; i < FMath::Min(2, Plataformas.Num()); ++i)
 		{
 			PlataformasSeleccionadas.Add(Plataformas[i]);
 		}
 
-		// Desactivar el movimiento en todas las plataformas antes de activar las seleccionadas
 		for (APlataforma* Plataforma : Plataformas)
 		{
 			if (Plataforma)
@@ -120,25 +117,21 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 			}
 		}
 
-		// Activar el movimiento en las plataformas seleccionadas
 		for (APlataforma* Plataforma : PlataformasSeleccionadas)
 		{
 			if (Plataforma)
 			{
 				Plataforma->bMoviendose = true;
 
-				// Definir la dirección de movimiento
-				int32 RandomDirection = FMath::RandRange(0, 1); // 0 para vertical, 1 para horizontal
+				int32 RandomDirection = FMath::RandRange(0, 1); 
 
 				if (RandomDirection == 0)
 				{
-					// Movimiento vertical (arriba/abajo)
-					Plataforma->DireccionMovimiento = FVector(0.f, 0.f, 1.f); // Ajusta según tu lógica de movimiento
+					Plataforma->DireccionMovimiento = FVector(0.f, 0.f, 1.f); 
 				}
 				else
 				{
-					// Movimiento horizontal (derecha/izquierda)
-					Plataforma->DireccionMovimiento = FVector(1.f, 0.f, 0.f); // Ajusta según tu lógica de movimiento
+					Plataforma->DireccionMovimiento = FVector(0.f, 1.f, 0.f); 
 				}
 			}
 		}
@@ -163,7 +156,7 @@ void ADonkeyKong_SIS457GameMode::BeginPlay()
 		}
 
 	}
-	GenerarCubosAleatoriamente(3);
+	GenerarCubosAleatoriamente(1);
 //	GetWorld()->GetTimerManager().SetTimer(Timer, this, &ADonkeyKong_SIS457GameMode::GenerarMurosAleatorios, 3.F, true);
 
 }
